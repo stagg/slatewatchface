@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
-import android.support.wearable.watchface.WatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.Time;
 import android.util.Log;
@@ -50,6 +48,7 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
 
         Paint mHourPaint;
         Paint mMinutePaint;
+        Paint mCenterPaint;
         Paint mSecondPaint;
         Paint mTickPaint;
         boolean mMute;
@@ -114,26 +113,37 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
 
             mHourPaint = new Paint();
             mHourPaint.setARGB(255, 200, 200, 200);
-            mHourPaint.setStrokeWidth(7.f);
+            mHourPaint.setStrokeWidth(8.f);
             mHourPaint.setAntiAlias(true);
-            mHourPaint.setStrokeCap(Paint.Cap.SQUARE);
+            mHourPaint.setStrokeCap(Paint.Cap.BUTT);
+            mHourPaint.setShadowLayer(5f, 0, 0, 0xaa000000);
 
             mMinutePaint = new Paint();
             mMinutePaint.setARGB(255, 200, 200, 200);
-            mMinutePaint.setStrokeWidth(5.f);
+            mMinutePaint.setStrokeWidth(8.f);
             mMinutePaint.setAntiAlias(true);
-            mMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
+            mMinutePaint.setStrokeCap(Paint.Cap.BUTT);
+            mMinutePaint.setShadowLayer(4f, 0, 0, 0xaa000000);
 
             mSecondPaint = new Paint();
             mSecondPaint.setARGB(255, 102, 45, 145);
-            mSecondPaint.setStrokeWidth(4.f);
+            mSecondPaint.setStrokeWidth(3.f);
             mSecondPaint.setAntiAlias(true);
             mSecondPaint.setStrokeCap(Paint.Cap.BUTT);
+            mSecondPaint.setShadowLayer(6f, 0, 0, 0xaa000000);
+
+            mCenterPaint = new Paint();
+            mCenterPaint.setARGB(255, 200, 200, 200);
+            mCenterPaint.setStrokeWidth(8.f);
+            mCenterPaint.setAntiAlias(true);
+            mCenterPaint.setStrokeCap(Paint.Cap.BUTT);
 
             mTickPaint = new Paint();
-            mTickPaint.setARGB(155, 213, 213, 213);
-            mTickPaint.setStrokeWidth(2.f);
+            mTickPaint.setARGB(100, 213, 213, 213);
+            mTickPaint.setStrokeWidth(4.f);
             mTickPaint.setAntiAlias(true);
+            mTickPaint.setShadowLayer(1f, 0, 0, 0xaa000000);
+
 
             mTime = new Time();
         }
@@ -186,19 +196,6 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
         }
 
         @Override
-        public void onInterruptionFilterChanged(int interruptionFilter) {
-            super.onInterruptionFilterChanged(interruptionFilter);
-            boolean inMuteMode = (interruptionFilter == WatchFaceService.INTERRUPTION_FILTER_NONE);
-            if (mMute != inMuteMode) {
-                mMute = inMuteMode;
-                mHourPaint.setAlpha(inMuteMode ? 100 : 255);
-                mMinutePaint.setAlpha(inMuteMode ? 100 : 255);
-                mSecondPaint.setAlpha(inMuteMode ? 80 : 255);
-                invalidate();
-            }
-        }
-
-        @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             /* draw your watch face */
             mTime.setToNow();
@@ -222,8 +219,8 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
             float centerY = height / 2f;
 
             // Draw the ticks.
-            float innerTickRadius = centerX - 10;
-            float largeInnerTickRadius = centerX - 25;
+            float innerTickRadius = centerX - 18;
+            float largeInnerTickRadius = centerX - 42;
             float outerTickRadius = centerX;
             for (int tickIndex = 0; tickIndex < 12; tickIndex++) {
                 float tickRot = (float) (tickIndex * Math.PI * 2 / 12);
@@ -248,13 +245,11 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
             float minRot = minutes / 30f * (float) Math.PI;
             float hrRot = ((mTime.hour + (minutes / 60f)) / 6f ) * (float) Math.PI;
 
-            float secLength = centerX - 20;
-            float minLength = centerX - 40;
+            float secLength = centerX - 16;
+            float minLength = centerX - 26;
             float hrLength = centerX - 80;
 
-//            mMinutePaint.setShadowLayer(5f, 0, 0, Color.BLACK);
-//            mHourPaint.setShadowLayer(5f, 0, 0, Color.BLACK);
-            mSecondPaint.setShadowLayer(5f, 0, 0, Color.BLACK);
+
 
             float hrX = (float) Math.sin(hrRot) * hrLength;
             float hrY = (float) -Math.cos(hrRot) * hrLength;
@@ -262,16 +257,17 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
 
             float minX = (float) Math.sin(minRot) * minLength;
             float minY = (float) -Math.cos(minRot) * minLength;
-            canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
             canvas.drawCircle(centerX, centerY, 10f, mMinutePaint);
+            canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
+            canvas.drawCircle(centerX, centerY, 10f, mCenterPaint);
 
             if (!isInAmbientMode()) {
-                float secStartX = (float) Math.sin(secRot) * - 30;
-                float secStartY = (float) -Math.cos(secRot) * - 30;
+                float secStartX = (float) Math.sin(secRot) * -40;
+                float secStartY = (float) -Math.cos(secRot) * -40;
                 float secX = (float) Math.sin(secRot) * secLength;
                 float secY = (float) -Math.cos(secRot) * secLength;
                 canvas.drawLine(centerX + secStartX, centerY + secStartY, centerX + secX, centerY + secY, mSecondPaint);
-                canvas.drawCircle(centerX, centerY, 5f, mSecondPaint);
+                canvas.drawCircle(centerX, centerY, 6f, mSecondPaint);
             }
         }
 

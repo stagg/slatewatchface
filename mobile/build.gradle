@@ -11,9 +11,29 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        debug {
+            storeFile file(project.property("Slate.debug.signing") + ".keystore")
+            storePassword project.property("Slate.debug.storePassword")
+            keyAlias 'stagg-de'
+            keyPassword project.property("Slate.debug.keyPassword")
+        }
+        release {
+            storeFile file(project.property("Slate.signing") + ".keystore")
+            storePassword project.property("Slate.storePassword")
+            keyAlias 'stagg-re'
+            keyPassword project.property("Slate.keyPassword")
+        }
+    }
     buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug
+            versionNameSuffix = ".debug"
+        }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
