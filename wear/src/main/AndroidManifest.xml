@@ -24,6 +24,12 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
                 android:resource="@drawable/preview_analog_circular" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.companionConfigurationAction"
+                android:value="ca.joshstagg.CONFIG_SLATE" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="ca.joshstagg.CONFIG_SLATE" />
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category
@@ -32,6 +38,21 @@
             </intent-filter>
         </service>
 
-    </application>
+        <activity
+            android:name=".SlateWatchFaceWearableConfigActivity"
+            android:label="@string/slate_config_name">
+            <intent-filter>
+                <action android:name="ca.joshstagg.CONFIG_SLATE" />
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
+        <service android:name=".SlateWatchFaceConfigListenerService">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
+        </service>
+
+    </application>
 </manifest>

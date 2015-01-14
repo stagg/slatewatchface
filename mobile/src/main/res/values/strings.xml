@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">Slate</string>
+    <string name="app_tag_line">Watch face</string>
+
+    <string name="slate_config_name">Slate watch face configuration</string>
+    <string name="slate_second_hand_color">Second hand color</string>
+
+    <string name="title_no_device_connected">No wearable device is currently connected.</string>
+    <string name="ok_no_device_connected">OK</string>
+
+    <string name="color_green">#ff258724</string>
+    <string name="color_blue">#ff3451cb</string>
+    <string name="color_purple">#ff662D91</string>
+    <string name="color_red">#ffb31c21</string>
+    <string name="color_pink">#ffb333ac</string>
+    <string name="color_orange">#ffcb6f00</string>
+    <string name="color_grey">#ff607d8b</string>
+    <string name="color_lite">#ffC8C8C8</string>
+
+
+    <string-array name="color_array">
+        <item>#ff258724</item>
+        <item>#ff3451cb</item>
+        <item>#ff662D91</item>
+        <item>#ffb31c21</item>
+        <item>#ffb333ac</item>
+        <item>#ffcb6f00</item>
+        <item>#ff607d8b</item>
+        <item>#ffC8C8C8</item>
+    </string-array>
+    <string-array name="color_array_names">
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Purple</item>
+        <item>Red</item>
+        <item>Pink</item>
+        <item>Orange</item>
+        <item>Grey</item>
+        <item>Lite</item>
+    </string-array>
 </resources>
