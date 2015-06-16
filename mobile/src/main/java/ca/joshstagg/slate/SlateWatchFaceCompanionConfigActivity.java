@@ -29,6 +29,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.wearable.companion.WatchFaceCompanion;
 import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -55,6 +57,8 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
     private static final String TAG = "SlateWatchFaceConfig";
 
     private static final String KEY_SECONDS_COLOR = "SECONDS_COLOR";
+    public static final String KEY_SMOOTH_MODE = "SMOOTH_MODE";
+    public static final String KEY_SHOW_DATE = "SHOW_DATE";
     private static final String PATH_WITH_FEATURE = "/watch_face_config/slate";
 
     private GoogleApiClient mGoogleApiClient;
@@ -108,11 +112,11 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
             DataItem configDataItem = dataItemResult.getDataItem();
             DataMapItem dataMapItem = DataMapItem.fromDataItem(configDataItem);
             DataMap config = dataMapItem.getDataMap();
-            setUpAllPickers(config);
+            setUpConfig(config);
         } else {
             // If DataItem with the current config can't be retrieved, select the default items on
             // each picker.
-            setUpAllPickers(null);
+            setUpConfig(null);
         }
     }
 
@@ -150,8 +154,28 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
      * @param config the {@code DigitalWatchFaceService} config {@link DataMap}. If null, the
      *         default items are selected.
      */
-    private void setUpAllPickers(DataMap config) {
+    private void setUpConfig(DataMap config) {
         setUpColorPickerSelection(R.id.seconds, KEY_SECONDS_COLOR, config, R.string.color_purple);
+        setUpBooleanOption(R.id.checkBox_smooth, KEY_SMOOTH_MODE, config, false);
+        setUpBooleanOption(R.id.checkBox_date, KEY_SHOW_DATE, config, true);
+    }
+
+    private void setUpBooleanOption(int layoutId, final String configKey, DataMap config, boolean def) {
+        boolean checked;
+        if (config != null) {
+            checked = config.getBoolean(configKey, def);
+        } else {
+            checked = def;
+        }
+        CheckBox checkBox = (CheckBox) findViewById(layoutId);
+        checkBox.setTag(configKey);
+        checkBox.setChecked(checked);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sendConfigUpdateMessage((String) buttonView.getTag(), isChecked);
+            }
+        });
     }
 
     private void setUpColorPickerSelection(int spinnerId, final String configKey, DataMap config, int defaultColorNameResId) {
@@ -184,7 +208,18 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
         spinner.drawPalette(colors, color);
     }
 
-
+    private void sendConfigUpdateMessage(String configKey, boolean value) {
+        if (mPeerId != null) {
+            DataMap config = new DataMap();
+            config.putBoolean(configKey, value);
+            byte[] rawData = config.toByteArray();
+            Wearable.MessageApi.sendMessage(mGoogleApiClient, mPeerId, PATH_WITH_FEATURE, rawData);
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "Sent watch face config message: " + configKey + " -> "
+                        + value);
+            }
+        }
+    }
     private void sendConfigUpdateMessage(String configKey, int color) {
         if (mPeerId != null) {
             DataMap config = new DataMap();

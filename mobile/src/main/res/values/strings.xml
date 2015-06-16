@@ -4,6 +4,8 @@
 
     <string name="slate_config_name">Slate watch face configuration</string>
     <string name="slate_second_hand_color">Second hand color</string>
+    <string name="slate_smooth_mode">Smooth second hand</string>
+    <string name="slate_show_date">Show Date</string>
 
     <string name="title_no_device_connected">No wearable device is currently connected.</string>
     <string name="ok_no_device_connected">OK</string>

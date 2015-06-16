@@ -43,6 +43,8 @@ public final class SlateWatchFaceUtil {
      * The color name must be a {@link String} recognized by {@link Color#parseColor}.
      */
     public static final String KEY_SECONDS_COLOR = "SECONDS_COLOR";
+    public static final String KEY_SMOOTH_MODE = "SMOOTH_MODE";
+    public static final String KEY_SHOW_DATE = "SHOW_DATE";
 
     /**
      * The path for the {@link DataItem} containing {@link SlateWatchFaceService} configuration.
@@ -53,7 +55,9 @@ public final class SlateWatchFaceUtil {
      * Name of the default interactive mode second digits color and the ambient mode second had
      * color.
      */
-    public static final int COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_HAND = Color.argb(255, 102, 45, 145);
+    public static final int COLOR_VALUE_DEFAULT = Color.argb(255, 102, 45, 145);
+    public static final boolean SMOOTH_MODE_VALUE_DEFAULT = false;
+    public static final boolean SHOW_DATE_VALUE_DEFAULT = true;
 
     /**
      * Callback interface to perform an action with the current config {@link DataMap} for

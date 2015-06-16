@@ -77,6 +77,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/layout_margin">
+
+            <CheckBox
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/slate_smooth_mode"
+                android:textColor="@color/config_activity_header_text_color"
+                android:id="@+id/checkBox_smooth"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:padding="8dp" />
+
+            <CheckBox
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/slate_show_date"
+                android:textColor="@color/config_activity_header_text_color"
+                android:id="@+id/checkBox_date"
+                android:layout_weight="1"
+                android:padding="8dp" />
+
             <TextView
                 android:text="@string/slate_second_hand_color"
                 android:textColor="@color/config_activity_header_text_color"
@@ -96,6 +116,7 @@
                 app:cal_numColumns="4"
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>
