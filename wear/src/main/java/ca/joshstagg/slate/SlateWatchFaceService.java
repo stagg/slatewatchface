@@ -18,6 +18,7 @@ import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.Time;
+import android.view.Gravity;
 import android.view.SurfaceHolder;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -30,7 +31,6 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
-import java.text.DateFormatSymbols;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +46,7 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
      * second hand.
      */
     private static final long INTERACTIVE_UPDATE_RATE_MS = TimeUnit.SECONDS.toMillis(1);
-    private static final long INTERACTIVE_SMOOTH_UPDATE_RATE_MS = TimeUnit.MILLISECONDS.toMillis(16);
+    private static final long INTERACTIVE_SMOOTH_UPDATE_RATE_MS = 4;
 
     @Override
     public Engine onCreateEngine() {
@@ -67,19 +67,17 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
         Paint mTextPaint;
         boolean mMute;
         Time mTime;
+        private long mUpdateRate = INTERACTIVE_UPDATE_RATE_MS;
 
         /** Handler to update the time once a second in interactive mode. */
-        final Handler mUpdateTimeHandler = new Handler() {
+        public final Handler mUpdateTimeHandler = new Handler() {
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_UPDATE_TIME:
-                        Logger.v(TAG, "updating time");
                         invalidate();
                         if (shouldTimerBeRunning()) {
-                            long mUpdateRate = mSmoothMode ? INTERACTIVE_SMOOTH_UPDATE_RATE_MS : INTERACTIVE_UPDATE_RATE_MS;
-                            long timeMs = System.currentTimeMillis();
-                            long delayMs = mUpdateRate - (timeMs % mUpdateRate);
+                            long delayMs = mUpdateRate - (System.currentTimeMillis() % mUpdateRate);
                             mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
                         }
                         break;
@@ -98,8 +96,8 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mTime.setToNow();
-                String weekDay = DateFormatSymbols.getInstance().getShortWeekdays()[mTime.weekDay];
-                date = weekDay + " " + mTime.monthDay;
+                date = Integer.toString(mTime.monthDay);
+                mTextPaint.getTextBounds(date, 0, date.length(), textBounds);
             }
         };
         boolean mRegisteredReceivers = false;
@@ -124,7 +122,7 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
         boolean mShowDate = SlateWatchFaceUtil.SHOW_DATE_VALUE_DEFAULT;
 
         String date;
-
+        Rect textBounds = new Rect();
         @Override
         public void onCreate(SurfaceHolder holder) {
             /* initialize your watch face */
@@ -133,6 +131,9 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
 
             setWatchFaceStyle(new WatchFaceStyle.Builder(SlateWatchFaceService.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
+                    .setStatusBarGravity(Gravity.CENTER_HORIZONTAL| Gravity.TOP)
+                    .setHotwordIndicatorGravity(Gravity.CENTER_HORIZONTAL| Gravity.BOTTOM)
+                    .setViewProtection(0)
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
                     .setShowSystemUiTime(false)
                     .build());
@@ -142,28 +143,28 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
 
             mHourPaint = new Paint();
-            mHourPaint.setARGB(255, 200, 200, 200);
-            mHourPaint.setStrokeWidth(8.f);
+            mHourPaint.setARGB(255, 245, 245, 245);
+            mHourPaint.setStrokeWidth(9.f);
             mHourPaint.setAntiAlias(true);
             mHourPaint.setStrokeCap(Paint.Cap.BUTT);
             mHourPaint.setShadowLayer(5f, 0, 0, 0xaa000000);
 
             mMinutePaint = new Paint();
-            mMinutePaint.setARGB(255, 200, 200, 200);
-            mMinutePaint.setStrokeWidth(8.f);
+            mMinutePaint.setARGB(255, 245, 245, 245);
+            mMinutePaint.setStrokeWidth(9.f);
             mMinutePaint.setAntiAlias(true);
             mMinutePaint.setStrokeCap(Paint.Cap.BUTT);
             mMinutePaint.setShadowLayer(4f, 0, 0, 0xaa000000);
 
             mSecondPaint = new Paint();
             mSecondPaint.setColor(mInteractiveSecondHandColor); //setARGB(255, 102, 45, 145);
-            mSecondPaint.setStrokeWidth(3.f);
+            mSecondPaint.setStrokeWidth(4.f);
             mSecondPaint.setAntiAlias(true);
             mSecondPaint.setStrokeCap(Paint.Cap.BUTT);
             mSecondPaint.setShadowLayer(6f, 0, 0, 0xaa000000);
 
             mCenterPaint = new Paint();
-            mCenterPaint.setARGB(255, 200, 200, 200);
+            mCenterPaint.setARGB(255, 245, 245, 245);
             mCenterPaint.setStrokeWidth(8.f);
             mCenterPaint.setAntiAlias(true);
             mCenterPaint.setStrokeCap(Paint.Cap.BUTT);
@@ -175,13 +176,17 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
             mTickPaint.setShadowLayer(1f, 0, 0, 0xaa000000);
 
             mTextPaint = new Paint();
-            mTextPaint.setARGB(255, 200, 200, 200);
+            mTextPaint.setARGB(100, 213, 213, 213);
+            mTextPaint.setTextSize(30f);
             mTextPaint.setStrokeWidth(3.f);
             mTextPaint.setAntiAlias(true);
 
             mTime = new Time();
-            String weekDay = DateFormatSymbols.getInstance().getShortWeekdays()[mTime.weekDay];
-            date = weekDay + " " + mTime.monthDay;
+            mTime.setToNow();
+            date = Integer.toString(mTime.monthDay);
+            mTextPaint.getTextBounds(date, 0, date.length(), textBounds);
+
+            mUpdateRate = mSmoothMode ? INTERACTIVE_SMOOTH_UPDATE_RATE_MS : INTERACTIVE_UPDATE_RATE_MS;
         }
 
         @Override
@@ -228,7 +233,8 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             /* draw your watch face */
-            mTime.setToNow();
+            long now = System.currentTimeMillis();
+            mTime.set(now);
 
             int width = bounds.width();
             int height = bounds.height();
@@ -256,8 +262,9 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
                     float tickRot = (float) (tickIndex * Math.PI * 2 / 12);
                     float innerX;
                     float innerY;
-
-                    if (tickIndex == 0 || tickIndex == 3 || tickIndex == 6 || tickIndex == 9) {
+                    if (mShowDate && tickIndex == 3) {
+                        continue;
+                    } else if (tickIndex == 0 || tickIndex == 3 || tickIndex == 6 || tickIndex == 9) {
                         innerX = (float) Math.sin(tickRot) * largeInnerTickRadius;
                         innerY = (float) -Math.cos(tickRot) * largeInnerTickRadius;
                     } else {
@@ -273,12 +280,15 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
                 canvas.drawColor(Color.BLACK);
             }
 
+            float millRot = ((now % 60000) / 1000f) / 30f * (float) Math.PI;
             float secRot = mTime.second / 30f * (float) Math.PI;
             int minutes = mTime.minute;
             float minRot = minutes / 30f * (float) Math.PI;
             float hrRot = ((mTime.hour + (minutes / 60f)) / 6f ) * (float) Math.PI;
 
-            canvas.drawText(date,centerX+20, centerY, mTextPaint);
+            if (!isInAmbientMode() && mShowDate) {
+                canvas.drawText(date, centerX*2-(textBounds.width()*1.5f), (centerY + (textBounds.height()/2)), mTextPaint);
+            }
 
             float secLength = centerX - 16;
             float minLength = centerX - 26;
@@ -295,10 +305,11 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
             canvas.drawCircle(centerX, centerY, 10f, mCenterPaint);
 
             if (!isInAmbientMode()) {
-                float secStartX = (float) Math.sin(secRot) * -40;
-                float secStartY = (float) -Math.cos(secRot) * -40;
-                float secX = (float) Math.sin(secRot) * secLength;
-                float secY = (float) -Math.cos(secRot) * secLength;
+                float secRotate =  mSmoothMode ? millRot : secRot;
+                float secStartX = (float) Math.sin(secRotate) * -40;
+                float secStartY = (float) -Math.cos(secRotate) * -40;
+                float secX = (float) Math.sin(secRotate) * secLength;
+                float secY = (float) -Math.cos(secRotate) * secLength;
                 canvas.drawLine(centerX + secStartX, centerY + secStartY, centerX + secX, centerY + secY, mSecondPaint);
                 canvas.drawCircle(centerX, centerY, 6f, mSecondPaint);
             }
@@ -385,17 +396,17 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
         }
 
         private void setDefaultValuesForMissingConfigKeys(DataMap config) {
-            addIntKeyIfMissing(config, SlateWatchFaceUtil.KEY_SECONDS_COLOR,
-                    SlateWatchFaceUtil.COLOR_VALUE_DEFAULT);
+            addStringKeyIfMissing(config, SlateWatchFaceUtil.KEY_SECONDS_COLOR,
+                    SlateWatchFaceUtil.COLOR_VALUE_STRING_DEFAULT);
             addBoolKeyIfMissing(config, SlateWatchFaceUtil.KEY_SMOOTH_MODE,
                     SlateWatchFaceUtil.SMOOTH_MODE_VALUE_DEFAULT);
             addBoolKeyIfMissing(config, SlateWatchFaceUtil.KEY_SHOW_DATE,
                     SlateWatchFaceUtil.SHOW_DATE_VALUE_DEFAULT);
         }
 
-        private void addIntKeyIfMissing(DataMap config, String key, int value) {
+        private void addStringKeyIfMissing(DataMap config, String key, String value) {
             if (!config.containsKey(key)) {
-                config.putInt(key, value);
+                config.putString(key, value);
             }
         }
 
@@ -452,16 +463,21 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
         private boolean updateUiForKey(String key, DataMap config) {
             switch (key) {
                 case SlateWatchFaceUtil.KEY_SECONDS_COLOR:
-                    int color = config.getInt(key);
-                    Logger.d(TAG, "Found watch face config key: " + key + " -> "
-                            + Integer.toHexString(color));
-                    mInteractiveSecondHandColor = color;
+                    String colorStr = config.getString(key);
+                    int color = mInteractiveSecondHandColor;
+                    if (null != colorStr) {
+                        color = Color.parseColor(config.getString(key));
+                        Logger.d(TAG, "Found watch face config key: " + key + " -> "
+                                + Integer.toHexString(color));
+                        mInteractiveSecondHandColor = color;
+                    }
                     if (!isInAmbientMode() && mSecondPaint != null) {
                         mSecondPaint.setColor(color);
                     }
                     break;
                 case SlateWatchFaceUtil.KEY_SMOOTH_MODE:
                     mSmoothMode = config.getBoolean(key);
+                    mUpdateRate = mSmoothMode ? INTERACTIVE_SMOOTH_UPDATE_RATE_MS : INTERACTIVE_UPDATE_RATE_MS;
                     break;
                 case SlateWatchFaceUtil.KEY_SHOW_DATE:
                     mShowDate = config.getBoolean(key);

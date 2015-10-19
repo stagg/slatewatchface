@@ -39,7 +39,7 @@
         </service>
 
         <activity
-            android:name=".SlateWatchFaceWearableConfigActivity"
+            android:name=".SlateWatchFaceWearablePrefActivity"
             android:label="@string/slate_config_name">
             <intent-filter>
                 <action android:name="ca.joshstagg.CONFIG_SLATE" />

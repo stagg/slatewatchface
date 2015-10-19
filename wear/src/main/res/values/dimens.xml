@@ -16,4 +16,6 @@
 <resources>
     <dimen name="config_color_picker_item_margin">32dp</dimen>
     <dimen name="content_padding_start">12dp</dimen>
+    <dimen name="circular_card_width">24dp</dimen>
+    <dimen name="circular_card_height">24dp</dimen>
 </resources>

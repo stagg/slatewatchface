@@ -55,9 +55,10 @@ public final class SlateWatchFaceUtil {
      * Name of the default interactive mode second digits color and the ambient mode second had
      * color.
      */
-    public static final int COLOR_VALUE_DEFAULT = Color.argb(255, 102, 45, 145);
+    public static final int COLOR_VALUE_DEFAULT = Color.argb(255, 94, 53, 117);
+    public static final String COLOR_VALUE_STRING_DEFAULT = "#5E35B1";
     public static final boolean SMOOTH_MODE_VALUE_DEFAULT = false;
-    public static final boolean SHOW_DATE_VALUE_DEFAULT = true;
+    public static final boolean SHOW_DATE_VALUE_DEFAULT = false;
 
     /**
      * Callback interface to perform an action with the current config {@link DataMap} for

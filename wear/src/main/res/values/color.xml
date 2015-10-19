@@ -24,12 +24,20 @@
     <color name="font_hint">#dfffffff</color>
     <color name="font_hint_dark">#df616161</color>
 
-    <color name="card_green">#ff259b24</color>
-    <color name="card_blue">#ff5677fc</color>
-    <color name="card_purple">#ff662D91</color>
-    <color name="card_red">#ffe51c23</color>
-    <color name="card_pink">#ffb333ac</color>
-    <color name="card_orange">#ffff9800</color>
-    <color name="card_grey">#ff607d8b</color>
-    <color name="card_dark">#ff212121</color>
+    <color name="card_red">#e53935</color>
+    <color name="card_pink">#D81B60</color>
+    <color name="card_purple_deep">#5E35B1</color>
+    <color name="card_purple">#8E24AA</color>
+    <color name="card_indigo">#3949AB</color>
+    <color name="card_blue">#1E88E5</color>
+    <color name="card_teal">#00897B</color>
+    <color name="card_green">#43A047</color>
+    <color name="card_lime">#CDDC39</color>
+    <color name="card_yellow">#FDD835</color>
+    <color name="card_orange">#FB8C00</color>
+    <color name="card_orange_deep">#F4511E</color>
+    <color name="card_brown">#6D4C41</color>
+    <color name="card_grey">#9E9E9E</color>
+    <color name="card_dark">#212121</color>
+    <color name="card_light">#F5F5F5</color>
 </resources>

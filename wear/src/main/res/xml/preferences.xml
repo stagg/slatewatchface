@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/slate_config_name"
+    >
+
+    <SwitchPreference
+        android:key="SHOW_DATE"
+        android:title="@string/slate_show_date"
+        android:summaryOn="@string/slate_show_date_summary_on"
+        android:summaryOff="@string/slate_show_date_summary_off"
+        app:wear_iconOn="@drawable/ic_visibility_white_24dp"
+        app:wear_iconOff="@drawable/ic_visibility_off_white_24dp"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreference
+        android:key="SMOOTH_MODE"
+        android:title="@string/slate_smooth_mode"
+        android:summaryOn="@string/slate_smooth_mode_summary_on"
+        android:summaryOff="@string/slate_smooth_mode_summary_off"
+        app:wear_iconOn="@drawable/ic_panorama_fisheye_white_24dp"
+        app:wear_iconOff="@drawable/ic_schedule_white_24dp"
+        android:defaultValue="true"
+        />
+
+    <ListPreference
+        android:key="SECONDS_COLOR"
+        android:title="@string/slate_second_hand_color"
+        android:icon="@drawable/ic_palette_white_24dp"
+        android:entries="@array/color_array_names"
+        android:entryValues="@array/color_array"
+        android:defaultValue="#5E35B1"
+        app:wear_entryIcons="@array/color_array_icons"
+        />
+
+</PreferenceScreen>

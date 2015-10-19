@@ -155,17 +155,15 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
      *         default items are selected.
      */
     private void setUpConfig(DataMap config) {
-        setUpColorPickerSelection(R.id.seconds, KEY_SECONDS_COLOR, config, R.string.color_purple);
+        setUpColorPickerSelection(R.id.seconds, KEY_SECONDS_COLOR, config, R.color.card_purple_deep);
         setUpBooleanOption(R.id.checkBox_smooth, KEY_SMOOTH_MODE, config, false);
         setUpBooleanOption(R.id.checkBox_date, KEY_SHOW_DATE, config, true);
     }
 
     private void setUpBooleanOption(int layoutId, final String configKey, DataMap config, boolean def) {
-        boolean checked;
+        boolean checked = def;
         if (config != null) {
             checked = config.getBoolean(configKey, def);
-        } else {
-            checked = def;
         }
         CheckBox checkBox = (CheckBox) findViewById(layoutId);
         checkBox.setTag(configKey);
@@ -179,11 +177,10 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
     }
 
     private void setUpColorPickerSelection(int spinnerId, final String configKey, DataMap config, int defaultColorNameResId) {
-        String defaultColorName = getString(defaultColorNameResId);
-        int defaultColor = Color.parseColor(defaultColorName);
+        int defaultColor = getResources().getColor(defaultColorNameResId);
         int color;
-        if (config != null) {
-            color = config.getInt(configKey, defaultColor);
+        if (config != null && config.getString(configKey) != null) {
+            color = Color.parseColor(config.getString(configKey));
         } else {
             color = defaultColor;
         }
@@ -223,7 +220,7 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
     private void sendConfigUpdateMessage(String configKey, int color) {
         if (mPeerId != null) {
             DataMap config = new DataMap();
-            config.putInt(configKey, color);
+            config.putString(configKey, "#"+Integer.toHexString(color).toUpperCase());
             byte[] rawData = config.toByteArray();
             Wearable.MessageApi.sendMessage(mGoogleApiClient, mPeerId, PATH_WITH_FEATURE, rawData);
 

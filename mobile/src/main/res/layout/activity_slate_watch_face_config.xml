@@ -25,7 +25,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -76,7 +76,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="@dimen/layout_margin">
+            android:layout_marginTop="@dimen/layout_margin"
+            android:layout_gravity="center_horizontal">
 
             <CheckBox
                 android:layout_width="fill_parent"
@@ -84,8 +85,8 @@
                 android:text="@string/slate_smooth_mode"
                 android:textColor="@color/config_activity_header_text_color"
                 android:id="@+id/checkBox_smooth"
-                android:layout_weight="1"
-                android:layout_gravity="center_horizontal"
+                android:layout_weight="0"
+                android:layout_gravity="center"
                 android:padding="8dp" />
 
             <CheckBox
@@ -94,7 +95,7 @@
                 android:text="@string/slate_show_date"
                 android:textColor="@color/config_activity_header_text_color"
                 android:id="@+id/checkBox_date"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:padding="8dp" />
 
             <TextView
@@ -102,7 +103,7 @@
                 android:textColor="@color/config_activity_header_text_color"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center_vertical|center_horizontal"
                 android:padding="8dp"
@@ -112,7 +113,7 @@
                 android:id="@+id/seconds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="0"
                 app:cal_numColumns="4"
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>

@@ -21,7 +21,9 @@ package ca.joshstagg.slate;
  * limitations under the License.
  */
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -68,6 +70,19 @@ public class SlateWatchFaceConfigListenerService extends WearableListenerService
             }
         }
 
+        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        for (String key : configKeysToOverwrite.keySet()) {
+            switch(key) {
+                case SlateWatchFaceUtil.KEY_SECONDS_COLOR:
+                    prefs.putString(key, configKeysToOverwrite.getString(key));
+                    break;
+                case SlateWatchFaceUtil.KEY_SHOW_DATE:
+                case SlateWatchFaceUtil.KEY_SMOOTH_MODE:
+                    prefs.putBoolean(key, configKeysToOverwrite.getBoolean(key));
+                    break;
+            }
+        }
+        prefs.commit();
         SlateWatchFaceUtil.overwriteKeysInConfigDataMap(mGoogleApiClient, configKeysToOverwrite);
     }
 
