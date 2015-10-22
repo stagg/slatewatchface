@@ -183,8 +183,6 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
 
             mTime = new Time();
             mTime.setToNow();
-            date = Integer.toString(mTime.monthDay);
-            mTextPaint.getTextBounds(date, 0, date.length(), textBounds);
 
             mUpdateRate = mSmoothMode ? INTERACTIVE_SMOOTH_UPDATE_RATE_MS : INTERACTIVE_UPDATE_RATE_MS;
         }
@@ -287,6 +285,8 @@ public class SlateWatchFaceService extends CanvasWatchFaceService {
             float hrRot = ((mTime.hour + (minutes / 60f)) / 6f ) * (float) Math.PI;
 
             if (!isInAmbientMode() && mShowDate) {
+                date = Integer.toString(mTime.monthDay);
+                mTextPaint.getTextBounds(date, 0, date.length(), textBounds);
                 canvas.drawText(date, centerX*2-(textBounds.width()*1.5f), (centerY + (textBounds.height()/2)), mTextPaint);
             }
 

@@ -12,7 +12,7 @@
         android:summaryOff="@string/slate_show_date_summary_off"
         app:wear_iconOn="@drawable/ic_visibility_white_24dp"
         app:wear_iconOff="@drawable/ic_visibility_off_white_24dp"
-        android:defaultValue="true"
+        android:defaultValue="false"
         />
 
     <SwitchPreference
@@ -22,16 +22,16 @@
         android:summaryOff="@string/slate_smooth_mode_summary_off"
         app:wear_iconOn="@drawable/ic_panorama_fisheye_white_24dp"
         app:wear_iconOff="@drawable/ic_schedule_white_24dp"
-        android:defaultValue="true"
+        android:defaultValue="false"
         />
 
     <ListPreference
-        android:key="SECONDS_COLOR"
+        android:key="SECONDS_COLOR_1_2_1"
         android:title="@string/slate_second_hand_color"
         android:icon="@drawable/ic_palette_white_24dp"
         android:entries="@array/color_array_names"
         android:entryValues="@array/color_array"
-        android:defaultValue="#5E35B1"
+        android:defaultValue="#FF5E35B1"
         app:wear_entryIcons="@array/color_array_icons"
         />
 

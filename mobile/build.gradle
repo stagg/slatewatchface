@@ -8,8 +8,8 @@ android {
         applicationId "ca.joshstagg.slate"
         minSdkVersion 18
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.2"
+        versionCode 5
+        versionName "1.2.1"
     }
     signingConfigs {
         debug {

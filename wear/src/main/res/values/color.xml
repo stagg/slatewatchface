@@ -19,25 +19,25 @@
     <color name="color_item_label_color">@color/font_hint</color>
     <color name="color_item_circle_border_color">@color/font_hint_dark</color>
 
-    <color name="font_text">#fff</color>
+    <color name="font_text">#ffffffff</color>
     <color name="font_text_dark">#ff212121</color>
     <color name="font_hint">#dfffffff</color>
     <color name="font_hint_dark">#df616161</color>
 
-    <color name="card_red">#e53935</color>
-    <color name="card_pink">#D81B60</color>
-    <color name="card_purple_deep">#5E35B1</color>
-    <color name="card_purple">#8E24AA</color>
-    <color name="card_indigo">#3949AB</color>
-    <color name="card_blue">#1E88E5</color>
-    <color name="card_teal">#00897B</color>
-    <color name="card_green">#43A047</color>
-    <color name="card_lime">#CDDC39</color>
-    <color name="card_yellow">#FDD835</color>
-    <color name="card_orange">#FB8C00</color>
-    <color name="card_orange_deep">#F4511E</color>
-    <color name="card_brown">#6D4C41</color>
-    <color name="card_grey">#9E9E9E</color>
-    <color name="card_dark">#212121</color>
-    <color name="card_light">#F5F5F5</color>
+    <color name="card_red">#FFE53935</color>
+    <color name="card_pink">#FFD81B60</color>
+    <color name="card_purple_deep">#FF5E35B1</color>
+    <color name="card_purple">#FF8E24AA</color>
+    <color name="card_indigo">#FF3949AB</color>
+    <color name="card_blue">#FF1E88E5</color>
+    <color name="card_teal">#FF00897B</color>
+    <color name="card_green">#FF43A047</color>
+    <color name="card_lime">#FFCDDC39</color>
+    <color name="card_yellow">#FFFDD835</color>
+    <color name="card_orange">#FFFB8C00</color>
+    <color name="card_orange_deep">#FFF4511E</color>
+    <color name="card_brown">#FF6D4C41</color>
+    <color name="card_grey">#FF9E9E9E</color>
+    <color name="card_dark">#FF212121</color>
+    <color name="card_light">#FFF5F5F5</color>
 </resources>

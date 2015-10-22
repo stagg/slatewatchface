@@ -56,7 +56,7 @@ public class SlateWatchFaceCompanionConfigActivity extends Activity
         ResultCallback<DataApi.DataItemResult> {
     private static final String TAG = "SlateWatchFaceConfig";
 
-    private static final String KEY_SECONDS_COLOR = "SECONDS_COLOR";
+    private static final String KEY_SECONDS_COLOR = "SECONDS_COLOR_1_2_1";
     public static final String KEY_SMOOTH_MODE = "SMOOTH_MODE";
     public static final String KEY_SHOW_DATE = "SHOW_DATE";
     private static final String PATH_WITH_FEATURE = "/watch_face_config/slate";

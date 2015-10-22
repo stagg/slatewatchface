@@ -42,7 +42,7 @@ public final class SlateWatchFaceUtil {
      * The {@link DataMap} key for {@link SlateWatchFaceService} second digits color name.
      * The color name must be a {@link String} recognized by {@link Color#parseColor}.
      */
-    public static final String KEY_SECONDS_COLOR = "SECONDS_COLOR";
+    public static final String KEY_SECONDS_COLOR = "SECONDS_COLOR_1_2_1";
     public static final String KEY_SMOOTH_MODE = "SMOOTH_MODE";
     public static final String KEY_SHOW_DATE = "SHOW_DATE";
 
@@ -56,7 +56,7 @@ public final class SlateWatchFaceUtil {
      * color.
      */
     public static final int COLOR_VALUE_DEFAULT = Color.argb(255, 94, 53, 117);
-    public static final String COLOR_VALUE_STRING_DEFAULT = "#5E35B1";
+    public static final String COLOR_VALUE_STRING_DEFAULT = "#FF5E35B1";
     public static final boolean SMOOTH_MODE_VALUE_DEFAULT = false;
     public static final boolean SHOW_DATE_VALUE_DEFAULT = false;
 
