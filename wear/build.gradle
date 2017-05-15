@@ -2,25 +2,25 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "ca.joshstagg.slate"
-        minSdkVersion 21
-        targetSdkVersion 21
+        minSdkVersion 25
+        targetSdkVersion 25
         versionCode 5
-        versionName "1.2.1"
+        versionName "2.0-alpha"
     }
     signingConfigs {
         debug {
-            storeFile file(project.property("Slate.debug.signing") + ".keystore")
+            storeFile file(relativePath(project.property("Slate.debug.signing")))
             storePassword project.property("Slate.debug.storePassword")
             keyAlias 'stagg-de'
             keyPassword project.property("Slate.debug.keyPassword")
         }
         release {
-            storeFile file(project.property("Slate.signing") + ".keystore")
+            storeFile file(relativePath(project.property("Slate.signing")))
             storePassword project.property("Slate.storePassword")
             keyAlias 'stagg-re'
             keyPassword project.property("Slate.keyPassword")
@@ -42,7 +42,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.support:wearable:1.1.0'
-    compile 'com.google.android.gms:play-services-wearable:7.5.0'
+    provided 'com.google.android.wearable:wearable:2.0.1'
+    compile 'com.google.android.support:wearable:2.0.1'
+    compile 'com.google.android.gms:play-services-wearable:10.2.4'
     compile 'me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0'
 }

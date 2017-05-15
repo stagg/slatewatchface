@@ -6,16 +6,6 @@
     >
 
     <SwitchPreference
-        android:key="SHOW_DATE"
-        android:title="@string/slate_show_date"
-        android:summaryOn="@string/slate_show_date_summary_on"
-        android:summaryOff="@string/slate_show_date_summary_off"
-        app:wear_iconOn="@drawable/ic_visibility_white_24dp"
-        app:wear_iconOff="@drawable/ic_visibility_off_white_24dp"
-        android:defaultValue="false"
-        />
-
-    <SwitchPreference
         android:key="SMOOTH_MODE"
         android:title="@string/slate_smooth_mode"
         android:summaryOn="@string/slate_smooth_mode_summary_on"

@@ -6,16 +6,17 @@ import java.lang.reflect.Field;
 
 /**
  * Weather ca.joshstagg.weather.library
- * Copyright 2014  Josh Stagg
+ * Copyright 2017 Josh Stagg
  */
+@SuppressWarnings("WeakerAccess")
 public class Logger {
 
-    public static final String PACKAGE = "ca.joshstagg.slate";
+    private static final String PACKAGE = "ca.joshstagg.slate";
 
-    public static boolean set;
-    public static boolean isDebug;
+    private static boolean set;
+    private static boolean isDebug;
 
-    public static boolean isDebug(){
+    private static boolean isDebug() {
         if (!set) {
             Object o = getBuildConfigValue("DEBUG");
             if (o == null) {
@@ -31,8 +32,10 @@ public class Logger {
     /**
      * Gets a field from the project's BuildConfig. This is useful when, for example, flavors
      * are used at the project level to set custom fields.
-     * @param fieldName     The name of the field-to-access
-     * @return              The value of the field, or {@code null} if the field is not found.
+     *
+     * @param fieldName The name of the field-to-access
+     *
+     * @return The value of the field, or {@code null} if the field is not found.
      */
     private static Object getBuildConfigValue(String fieldName) {
         try {
@@ -45,7 +48,9 @@ public class Logger {
     }
 
     public static void v(String tag, String message) {
-        if (isDebug()) Log.v(tag, message);
+        if (isDebug()) {
+            Log.v(tag, message);
+        }
     }
 
     public static void v(String tag, String message, Throwable e) {
@@ -55,7 +60,9 @@ public class Logger {
     }
 
     public static void d(String tag, String message) {
-        if (isDebug()) Log.d(tag, message);
+        if (isDebug()) {
+            Log.d(tag, message);
+        }
     }
 
     public static void d(String tag, String message, Throwable e) {
@@ -78,7 +85,9 @@ public class Logger {
     }
 
     public static void w(String tag, String message) {
-        if (isDebug()) Log.w(tag, message);
+        if (isDebug()) {
+            Log.w(tag, message);
+        }
     }
 
     public static void w(String tag, String message, Throwable e) {
@@ -87,7 +96,11 @@ public class Logger {
         }
     }
 
-    public static void e(String tag, String message) {if (isDebug()) Log.e(tag, message);}
+    public static void e(String tag, String message) {
+        if (isDebug()) {
+            Log.e(tag, message);
+        }
+    }
 
     public static void e(String tag, String message, Throwable e) {
         if (isDebug()) {
