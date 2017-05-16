@@ -5,7 +5,7 @@ import android.app.Application;
 public class Slate extends Application {
 
     private static Slate instance;
-    private ConfigService mConfigService;
+    private ConfigManager mConfigService;
 
     public Slate() {
         super();
@@ -15,10 +15,10 @@ public class Slate extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mConfigService = new ConfigService(this.getApplicationContext());
+        mConfigService = new ConfigManager(this.getApplicationContext());
     }
 
-    public ConfigService getConfigService() {
+    public ConfigManager getConfigService() {
         return mConfigService;
     }
 

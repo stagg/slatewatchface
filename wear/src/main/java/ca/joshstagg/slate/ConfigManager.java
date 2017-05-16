@@ -32,19 +32,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static ca.joshstagg.slate.Constants.PATH_WITH_FEATURE;
 import static ca.joshstagg.slate.Constants.SCHEME_WEAR;
 
-public class ConfigService implements DataApi.DataListener,
+public class ConfigManager implements DataApi.DataListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String TAG = "ConfigService";
+    private static final String TAG = "ConfigManager";
 
     private final Context mContext;
     private final Config mConfig;
     private final GoogleApiClient mGoogleApiClient;
     private final AtomicInteger mConnected = new AtomicInteger(0);
 
-    ConfigService(Context context) {
+    ConfigManager(Context context) {
         mContext = context;
         mConfig = new Config();
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -102,7 +102,7 @@ public class ConfigService implements DataApi.DataListener,
         DataMap configKeysToOverwrite = new DataMap();
         switch (key) {
             case Constants.KEY_SECONDS_COLOR:
-                String color = sharedPreferences.getString(key, Constants.COLOR_STRING_DEFAULT);
+                String color = sharedPreferences.getString(key, Constants.ACCENT_COLOR_STRING_DEFAULT);
                 configKeysToOverwrite.putString(Constants.KEY_SECONDS_COLOR, color);
                 Logger.d(TAG, "Update config color:" + color);
                 break;
@@ -146,8 +146,8 @@ public class ConfigService implements DataApi.DataListener,
                     @Override
                     void onSuccess(@NonNull DataMap startupConfig) {
                         setDefaultValuesForMissingConfigKeys(startupConfig);
-                        putConfigDataItem(startupConfig);
                         updateConfig(startupConfig);
+                        putConfigDataItem(startupConfig);
                     }
                 });
     }
@@ -158,15 +158,12 @@ public class ConfigService implements DataApi.DataListener,
      * @param config The current DataMap
      */
     private void setDefaultValuesForMissingConfigKeys(DataMap config) {
-        addStringKeyIfMissing(config, Constants.KEY_SECONDS_COLOR, Constants.COLOR_STRING_DEFAULT);
+        addStringKeyIfMissing(config, Constants.KEY_SECONDS_COLOR, Constants.ACCENT_COLOR_STRING_DEFAULT);
         addBoolKeyIfMissing(config, Constants.KEY_SMOOTH_MODE, Constants.SMOOTH_MOVEMENT_DEFAULT);
     }
 
-    private void updateConfig(final DataMap config) {
+    private void updateConfig(DataMap config) {
         for (String configKey : config.keySet()) {
-            if (!config.containsKey(configKey)) {
-                continue;
-            }
             updateConfigForKey(configKey, config);
         }
     }
@@ -191,7 +188,7 @@ public class ConfigService implements DataApi.DataListener,
                 mConfig.setSmoothMode(config.getBoolean(key));
                 break;
             default:
-                Logger.w(TAG, "Ignoring unknown config key: " + key);
+                Logger.d(TAG, "Ignoring unknown config key: " + key);
         }
     }
 

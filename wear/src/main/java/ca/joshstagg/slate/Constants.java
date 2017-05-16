@@ -17,11 +17,10 @@ package ca.joshstagg.slate;
  */
 
 import android.graphics.Color;
+import android.support.wearable.complications.ComplicationData;
 
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Slate ca.joshstagg.slate
@@ -37,7 +36,7 @@ final class Constants {
      * Update rate in milliseconds for interactive mode. We update once a second to advance the
      * second hand.
      */
-    static final long INTERACTIVE_UPDATE_RATE_MS = TimeUnit.SECONDS.toMillis(1);
+    static final long INTERACTIVE_UPDATE_RATE_MS = 1000;
     static final long INTERACTIVE_SMOOTH_UPDATE_RATE_MS = 4;
 
     /**
@@ -54,8 +53,24 @@ final class Constants {
     static final String PATH_WITH_FEATURE = "/watch_face_config/slate";
 
 
-    static final String COLOR_STRING_DEFAULT = "#FF5E35B1";
-    static final int COLOR_DEFAULT = Color.parseColor(COLOR_STRING_DEFAULT);
+    static final String ACCENT_COLOR_STRING_DEFAULT = "#FF5E35B1";
+    static final int ACCENT_COLOR_DEFAULT = Color.parseColor(ACCENT_COLOR_STRING_DEFAULT);
     static final boolean SMOOTH_MOVEMENT_DEFAULT = false;
+
+    // Unique IDs for each complication.
+    static final int LEFT_DIAL_COMPLICATION = 0;
+    static final int RIGHT_DIAL_COMPLICATION = 1;
+
+    // Left and right complication IDs as array for Complication API.
+    static final int[] COMPLICATION_IDS = {LEFT_DIAL_COMPLICATION, RIGHT_DIAL_COMPLICATION};
+
+    // Left and right dial supported types.
+    static final int[][] COMPLICATION_SUPPORTED_TYPES = {
+            {ComplicationData.TYPE_SHORT_TEXT},
+            {ComplicationData.TYPE_SHORT_TEXT}
+    };
+
+    static final float COMPLICATION_TEXT_SIZE = 24f;
+    static final int COMPLICATION_TAP_BUFFER = 40;
 }
 

@@ -3,7 +3,7 @@ package ca.joshstagg.slate;
 class Config {
 
     // Config
-    private int mAccentColor = Constants.COLOR_DEFAULT;
+    private int mAccentColor = Constants.ACCENT_COLOR_DEFAULT;
     private long mUpdateRate = Constants.INTERACTIVE_UPDATE_RATE_MS;
     private boolean mSmoothMovement = Constants.SMOOTH_MOVEMENT_DEFAULT;
 

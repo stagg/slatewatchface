@@ -10,7 +10,7 @@ import preference.WearPreferenceActivity;
  */
 public class SlateWatchFaceWearablePrefActivity extends WearPreferenceActivity {
 
-    private ConfigService mSlateConfigService;
+    private ConfigManager mSlateConfigService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
