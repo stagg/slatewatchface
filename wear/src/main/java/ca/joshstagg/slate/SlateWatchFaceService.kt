@@ -64,14 +64,13 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
          */
         override fun onCreate(holder: SurfaceHolder?) {
             super.onCreate(holder)
-            setWatchFaceStyle(WatchFaceStyle.Builder(this@SlateWatchFaceService)
+            val component: ComponentName = ComponentName(mContext, SlateWatchFaceService::class.java)
+            setWatchFaceStyle(WatchFaceStyle.Builder.forComponentName(component)
                     .setStatusBarGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP)
                     .build())
 
             mSlateTime = SlateTime(mContext)
-
-            val backgroundDrawable = ContextCompat.getDrawable(mContext, R.drawable.bg)
-            mBackgroundBitmap = (backgroundDrawable as BitmapDrawable).bitmap
+            mBackgroundBitmap = (ContextCompat.getDrawable(mContext, R.drawable.bg) as BitmapDrawable).bitmap
 
             initializeComplication()
         }
