@@ -56,10 +56,12 @@ internal object Constants {
 
     // Unique IDs for each complication.
     val LEFT_DIAL_COMPLICATION = 0
-    val RIGHT_DIAL_COMPLICATION = 1
+    val TOP_DIAL_COMPLICATION = 1
+    val RIGHT_DIAL_COMPLICATION = 2
+    val BOTTOM_DIAL_COMPLICATION = 3
 
     // Left and right complication IDs as array for Complication API.
-    val COMPLICATION_IDS = intArrayOf(LEFT_DIAL_COMPLICATION, RIGHT_DIAL_COMPLICATION)
+    val COMPLICATION_IDS = intArrayOf(LEFT_DIAL_COMPLICATION, TOP_DIAL_COMPLICATION, RIGHT_DIAL_COMPLICATION, BOTTOM_DIAL_COMPLICATION)
 
     // Left and right dial supported types.
     val COMPLICATION_SUPPORTED_TYPES = arrayOf(intArrayOf(ComplicationData.TYPE_SHORT_TEXT), intArrayOf(ComplicationData.TYPE_SHORT_TEXT))

@@ -16,11 +16,12 @@ import android.support.wearable.complications.SystemProviders
 import android.support.wearable.watchface.CanvasWatchFaceService
 import android.support.wearable.watchface.WatchFaceService
 import android.support.wearable.watchface.WatchFaceStyle
-import android.text.TextUtils
 import android.util.Log
 import android.util.SparseArray
 import android.view.Gravity
 import android.view.SurfaceHolder
+import ca.joshstagg.slate.complication.ComplicationRenderFactory
+import ca.joshstagg.slate.complication.Render
 
 /**
  * Slate ca.joshstagg.slate
@@ -35,11 +36,13 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
     inner class Engine internal constructor(private val mContext: Context) : CanvasWatchFaceService.Engine() {
         private val mUpdateTimeHandler: Handler
         private val mTicks = arrayOfNulls<FloatArray>(12)
+        private val mComplications = mutableMapOf<Int, Array<PointF>>()
 
         private val mPaints: SlatePaints = SlatePaints()
         private var mSlateTime: SlateTime? = null
         private var mBackgroundBitmap: Bitmap? = null
         private var mBackgroundScaledBitmap: Bitmap? = null
+        private var mComplicationRenderFactory: ComplicationRenderFactory? = null
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
          * disable anti-aliasing in ambient mode.
@@ -49,7 +52,6 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
 
         private var mWidth: Int = 0
         private var mHeight: Int = 0
-        private var mComplicationsY: Int = 0
 
         private var mActiveComplicationDataSparseArray: SparseArray<ComplicationData> = SparseArray(Constants.COMPLICATION_IDS.size)
 
@@ -70,14 +72,17 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                     .build())
 
             mSlateTime = SlateTime(mContext)
+            mComplicationRenderFactory = ComplicationRenderFactory(mContext)
             mBackgroundBitmap = (ContextCompat.getDrawable(mContext, R.drawable.bg) as BitmapDrawable).bitmap
 
-            initializeComplication()
+            createComplications()
         }
 
-        private fun initializeComplication() {
+        private fun createComplications() {
             setDefaultSystemComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, SystemProviders.WATCH_BATTERY, ComplicationData.TYPE_SHORT_TEXT)
             setDefaultSystemComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, SystemProviders.DATE, ComplicationData.TYPE_SHORT_TEXT)
+            setDefaultSystemComplicationProvider(Constants.TOP_DIAL_COMPLICATION, SystemProviders.UNREAD_NOTIFICATION_COUNT, ComplicationData.TYPE_SHORT_TEXT)
+            setDefaultSystemComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, SystemProviders.WORLD_CLOCK, ComplicationData.TYPE_SHORT_TEXT)
             setActiveComplications(*Constants.COMPLICATION_IDS)
         }
 
@@ -110,6 +115,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         private fun getTappedComplicationId(x: Int, y: Int): Int {
             var complicationData: ComplicationData?
             val currentTimeMillis = System.currentTimeMillis()
+            val complicationBoundingRect = RectF(0F, 0F, 0F, 0F)
 
             for (id in Constants.COMPLICATION_IDS) {
                 complicationData = mActiveComplicationDataSparseArray.get(id)
@@ -119,34 +125,18 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                         && complicationData.type != ComplicationData.TYPE_NOT_CONFIGURED
                         && complicationData.type != ComplicationData.TYPE_EMPTY) {
 
-                    val complicationBoundingRect = Rect(0, 0, 0, 0)
 
-                    when (id) {
-                        Constants.LEFT_DIAL_COMPLICATION -> complicationBoundingRect.set(
-                                0, // left
-                                mComplicationsY - Constants.COMPLICATION_TAP_BUFFER, // top
-                                mWidth / 2, // right
-                                Constants.COMPLICATION_TEXT_SIZE.toInt()               // bottom
+                    val origin = mComplications.getValue(id)[0]
+                    val center = mComplications.getValue(id)[1]
+                    val top = origin.x - Constants.COMPLICATION_TAP_BUFFER
+                    val left = origin.y - Constants.COMPLICATION_TAP_BUFFER
+                    val right = (origin.x + (origin.x - center.x) * 2) + Constants.COMPLICATION_TAP_BUFFER
+                    val bottom = (origin.y + (origin.y - center.y) * 2) + Constants.COMPLICATION_TAP_BUFFER
 
-                                        + mComplicationsY
-                                        + Constants.COMPLICATION_TAP_BUFFER)
+                    complicationBoundingRect.set(left, top, right, bottom)
 
-                        Constants.RIGHT_DIAL_COMPLICATION -> complicationBoundingRect.set(
-                                mWidth / 2, // left
-                                mComplicationsY - Constants.COMPLICATION_TAP_BUFFER, // top
-                                mWidth, // right
-                                Constants.COMPLICATION_TEXT_SIZE.toInt()               // bottom
-
-                                        + mComplicationsY
-                                        + Constants.COMPLICATION_TAP_BUFFER)
-                    }
-
-                    if (complicationBoundingRect.width() > 0) {
-                        if (complicationBoundingRect.contains(x, y)) {
-                            return id
-                        }
-                    } else {
-                        Log.e(TAG, "Not a recognized complication id.")
+                    if (complicationBoundingRect.width() > 0 && complicationBoundingRect.contains(x.toFloat(), y.toFloat())) {
+                        return id
                     }
                 }
             }
@@ -197,14 +187,9 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             mWidth = width
             mHeight = height
 
-            /*
-             * Since the height of the complications text does not change, we only have to
-             * recalculate when the surface changes.
-             */
-            mComplicationsY = (mHeight / 2 + mPaints.complication.textSize / 3).toInt()
-
             initializeBackground(width, height)
             initializeTicks(width, height)
+            initializeComplications(width, height)
         }
 
         // Scale the background to fit.
@@ -234,6 +219,37 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                 val outerX = Math.sin(tickRot.toDouble()).toFloat() * centerX
                 val outerY = (-Math.cos(tickRot.toDouble())).toFloat() * centerX
                 mTicks[tickIndex] = floatArrayOf(centerX + innerX, centerY + innerY, centerX + outerX, centerY + outerY)
+            }
+        }
+
+        private fun initializeComplications(width: Int, height: Int) {
+            val radius = (width / 8).toFloat()
+            for (id in Constants.COMPLICATION_IDS) {
+                val x: Float
+                val y: Float
+                val cx: Float
+                val cy: Float
+                when (id) {
+                    Constants.TOP_DIAL_COMPLICATION -> {
+                        cx = (width / 2).toFloat()
+                        cy = (height / 4).toFloat()
+                    }
+                    Constants.BOTTOM_DIAL_COMPLICATION -> {
+                        cx = (width / 2).toFloat()
+                        cy = (height * .75).toFloat()
+                    }
+                    Constants.LEFT_DIAL_COMPLICATION -> {
+                        cx = (width / 4).toFloat()
+                        cy = (height / 2).toFloat()
+                    }
+                    else -> { //Constants.RIGHT_DIAL_COMPLICATION
+                        cx = (width * .75).toFloat()
+                        cy = (height / 2).toFloat()
+                    }
+                }
+                x = cx - radius
+                y = cy - radius
+                mComplications.put(id, arrayOf(PointF(x, y), PointF(cx, cy)))
             }
         }
 
@@ -272,67 +288,16 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                 complicationData = mActiveComplicationDataSparseArray.get(id)
                 if (complicationData != null && complicationData.isActive(currentTimeMillis)) {
 
-                    // Both Short Text and No Permission Types can be rendered with the same code.
-                    // No Permission will display "--" with an Intent to launch a permission prompt.
-                    // If you want to support more types, just add a "else if" below with your
-                    // rendering code inside.
-                    // Render factory here -> factory picks a complication renderer, gives it dimensions, data, and a section of canvas to draw on.
-                    // Keep the main location and size/positional rendering here
-                    if (complicationData.type == ComplicationData.TYPE_SHORT_TEXT || complicationData.type == ComplicationData.TYPE_NO_PERMISSION) {
-
-                        val mainText = complicationData.shortText
-                        val subText = complicationData.shortTitle
-
-                        var complicationMessage = mainText.getText(applicationContext, currentTimeMillis)
-
-                        /* In most cases you would want the subText (Title) under the
-                         * mainText (Text), but to keep it simple for the code lab, we are
-                         * concatenating them all on one line.
-                         */
-                        if (subText != null) {
-                            complicationMessage = TextUtils.concat(complicationMessage, " ",
-                                    subText.getText(applicationContext, currentTimeMillis))
-                        }
-
-                        //Log.d(TAG, "Com id: " + COMPLICATION_IDS[i] + "\t" + complicationMessage);
-                        val textWidth = mPaints.complication.measureText(
-                                complicationMessage,
-                                0,
-                                complicationMessage.length).toDouble()
-
-                        val complicationsX: Int
-                        when (id) {
-                            Constants.LEFT_DIAL_COMPLICATION -> {
-                                complicationsX = (mWidth / 2 - textWidth).toInt() / 2
-                            }
-                            else -> {
-                                val offset = (mWidth / 2 - textWidth).toInt() / 2
-                                complicationsX = mWidth / 2 + offset
-                            }
-                        }
-
-                        val cx = complicationsX + (textWidth / 2).toFloat()
-                        val cy = (mHeight / 2).toFloat()
-                        val radius = (mHeight / 8).toFloat()
-                        if (!isAmbient) {
-                            val temp2 = Paint()
-                            temp2.isAntiAlias = true
-                            temp2.setARGB(80, 80, 80, 80)
-                            canvas.drawCircle(cx, cy, radius, temp2)
-
-                            val temp = Paint()
-                            temp.isAntiAlias = true
-                            temp.setARGB(60, 0, 0, 0)
-                            canvas.drawCircle(cx, cy, radius - 4f, temp)
-                        }
-                        canvas.drawText(
-                                complicationMessage,
-                                0,
-                                complicationMessage.length,
-                                complicationsX.toFloat(),
-                                mComplicationsY.toFloat(),
-                                mPaints.complication)
+                    val origin = mComplications.getValue(id)[0]
+                    val center = mComplications.getValue(id)[1]
+                    val render = Render(canvas, origin, center, currentTimeMillis, mPaints, complicationData)
+                    val renderer = mComplicationRenderFactory?.renderFor(complicationData.type)
+                    if (isAmbient) {
+                        renderer?.ambientRender(render)
+                    } else {
+                        renderer?.render(render)
                     }
+
                 }
             }
         }
