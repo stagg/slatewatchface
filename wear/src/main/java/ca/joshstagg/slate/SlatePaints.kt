@@ -10,7 +10,9 @@ internal class SlatePaints {
     val second: Paint = Paint()
     val center: Paint = Paint()
     val tick: Paint = Paint()
-    val complication: Paint = Paint()
+    val complicationText: Paint = Paint()
+    val complicationMainText: Paint = Paint()
+    val complicationSubText: Paint = Paint()
 
     var accentHandColor = Constants.ACCENT_COLOR_DEFAULT
         set(value) {
@@ -53,10 +55,23 @@ internal class SlatePaints {
         tick.isAntiAlias = true
         tick.setShadowLayer(1f, 0f, 0f, mShadowColor)
 
-        complication.color = mComplicationColor
-        complication.textSize = Constants.COMPLICATION_TEXT_SIZE
-        complication.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
-        complication.isAntiAlias = true
+        complicationText.color = mComplicationColor
+        complicationText.textSize = Constants.COMPLICATION_TEXT_SIZE
+        complicationText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        complicationText.textAlign = Paint.Align.CENTER
+        complicationText.isAntiAlias = true
+
+        complicationMainText.color = mComplicationColor
+        complicationMainText.textSize = Constants.COMPLICATION_MAIN_TEXT_SIZE
+        complicationMainText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        complicationMainText.textAlign = Paint.Align.CENTER
+        complicationMainText.isAntiAlias = true
+
+        complicationSubText.color = mComplicationColor
+        complicationSubText.textSize = Constants.COMPLICATION_SUB_TEXT_SIZE
+        complicationSubText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        complicationSubText.textAlign = Paint.Align.CENTER
+        complicationSubText.isAntiAlias = true
     }
 
     fun setAntiAlias(antiAlias: Boolean) {
@@ -65,6 +80,8 @@ internal class SlatePaints {
         second.isAntiAlias = antiAlias
         center.isAntiAlias = antiAlias
         tick.isAntiAlias = antiAlias
-        complication.isAntiAlias = antiAlias
+        complicationText.isAntiAlias = antiAlias
+        complicationMainText.isAntiAlias = antiAlias
+        complicationSubText.isAntiAlias = antiAlias
     }
 }

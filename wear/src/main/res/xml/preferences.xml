@@ -2,8 +2,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:title="@string/slate_config_name"
-    >
+    android:title="@string/slate_config_name">
 
     <SwitchPreference
         android:key="SMOOTH_MODE"

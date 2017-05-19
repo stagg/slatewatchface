@@ -67,6 +67,8 @@ internal object Constants {
     val COMPLICATION_SUPPORTED_TYPES = arrayOf(intArrayOf(ComplicationData.TYPE_SHORT_TEXT), intArrayOf(ComplicationData.TYPE_SHORT_TEXT))
 
     val COMPLICATION_TEXT_SIZE = 24f
+    val COMPLICATION_MAIN_TEXT_SIZE = 20f
+    val COMPLICATION_SUB_TEXT_SIZE = 16f
     val COMPLICATION_TAP_BUFFER = 40
 }
 
