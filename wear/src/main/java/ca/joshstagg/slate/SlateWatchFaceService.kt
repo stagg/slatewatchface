@@ -72,6 +72,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             val component: ComponentName = ComponentName(mContext, SlateWatchFaceService::class.java)
             setWatchFaceStyle(WatchFaceStyle.Builder.forComponentName(component)
                     .setStatusBarGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP)
+                    .setAcceptsTapEvents(true)
                     .build())
 
             mSlateTime = SlateTime(mContext)
@@ -130,12 +131,12 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
 
 
                     val rect = mComplications.getValue(id)
-                    val top = rect.left - Constants.COMPLICATION_TAP_BUFFER
-                    val left = rect.top - Constants.COMPLICATION_TAP_BUFFER
-                    val right = rect.right + Constants.COMPLICATION_TAP_BUFFER
-                    val bottom = rect.bottom + Constants.COMPLICATION_TAP_BUFFER
+//                    val top = rect.left - Constants.COMPLICATION_TAP_BUFFER
+//                    val left = rect.top - Constants.COMPLICATION_TAP_BUFFER
+//                    val right = rect.right + Constants.COMPLICATION_TAP_BUFFER
+//                    val bottom = rect.bottom + Constants.COMPLICATION_TAP_BUFFER
 
-                    complicationBoundingRect.set(left, top, right, bottom)
+                    complicationBoundingRect.set(rect)
 
                     if (complicationBoundingRect.width() > 0 && complicationBoundingRect.contains(x, y)) {
                         return id
