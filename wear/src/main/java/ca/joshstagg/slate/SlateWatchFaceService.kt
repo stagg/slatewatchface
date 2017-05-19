@@ -3,7 +3,10 @@ package ca.joshstagg.slate
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.icu.util.Calendar
 import android.os.Bundle
@@ -36,7 +39,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
     inner class Engine internal constructor(private val mContext: Context) : CanvasWatchFaceService.Engine() {
         private val mUpdateTimeHandler: Handler
         private val mTicks = arrayOfNulls<FloatArray>(12)
-        private val mComplications = mutableMapOf<Int, Array<PointF>>()
+        private val mComplications = mutableMapOf<Int, Rect>()
 
         private val mPaints: SlatePaints = SlatePaints()
         private var mSlateTime: SlateTime? = null
@@ -115,7 +118,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         private fun getTappedComplicationId(x: Int, y: Int): Int {
             var complicationData: ComplicationData?
             val currentTimeMillis = System.currentTimeMillis()
-            val complicationBoundingRect = RectF(0F, 0F, 0F, 0F)
+            val complicationBoundingRect = Rect(0, 0, 0, 0)
 
             for (id in Constants.COMPLICATION_IDS) {
                 complicationData = mActiveComplicationDataSparseArray.get(id)
@@ -126,16 +129,15 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                         && complicationData.type != ComplicationData.TYPE_EMPTY) {
 
 
-                    val origin = mComplications.getValue(id)[0]
-                    val center = mComplications.getValue(id)[1]
-                    val top = origin.x - Constants.COMPLICATION_TAP_BUFFER
-                    val left = origin.y - Constants.COMPLICATION_TAP_BUFFER
-                    val right = (origin.x + (origin.x - center.x) * 2) + Constants.COMPLICATION_TAP_BUFFER
-                    val bottom = (origin.y + (origin.y - center.y) * 2) + Constants.COMPLICATION_TAP_BUFFER
+                    val rect = mComplications.getValue(id)
+                    val top = rect.left - Constants.COMPLICATION_TAP_BUFFER
+                    val left = rect.top - Constants.COMPLICATION_TAP_BUFFER
+                    val right = rect.right + Constants.COMPLICATION_TAP_BUFFER
+                    val bottom = rect.bottom + Constants.COMPLICATION_TAP_BUFFER
 
                     complicationBoundingRect.set(left, top, right, bottom)
 
-                    if (complicationBoundingRect.width() > 0 && complicationBoundingRect.contains(x.toFloat(), y.toFloat())) {
+                    if (complicationBoundingRect.width() > 0 && complicationBoundingRect.contains(x, y)) {
                         return id
                     }
                 }
@@ -223,33 +225,33 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         }
 
         private fun initializeComplications(width: Int, height: Int) {
-            val radius = (width / 8).toFloat()
+            val radius: Int = width / 8
             for (id in Constants.COMPLICATION_IDS) {
-                val x: Float
-                val y: Float
-                val cx: Float
-                val cy: Float
+                val cx: Number
+                val cy: Number
                 when (id) {
                     Constants.TOP_DIAL_COMPLICATION -> {
-                        cx = (width / 2).toFloat()
-                        cy = (height / 4).toFloat()
+                        cx = width / 2
+                        cy = height / 4
                     }
                     Constants.BOTTOM_DIAL_COMPLICATION -> {
-                        cx = (width / 2).toFloat()
-                        cy = (height * .75).toFloat()
+                        cx = width / 2
+                        cy = height * .75
                     }
                     Constants.LEFT_DIAL_COMPLICATION -> {
-                        cx = (width / 4).toFloat()
-                        cy = (height / 2).toFloat()
+                        cx = width / 4
+                        cy = height / 2
                     }
                     else -> { //Constants.RIGHT_DIAL_COMPLICATION
-                        cx = (width * .75).toFloat()
-                        cy = (height / 2).toFloat()
+                        cx = width * .75
+                        cy = height / 2
                     }
                 }
-                x = cx - radius
-                y = cy - radius
-                mComplications.put(id, arrayOf(PointF(x, y), PointF(cx, cy)))
+                val left = cx.toInt() - radius
+                val top = cy.toInt() - radius
+                val right = cx.toInt() + radius
+                val bottom = cy.toInt() + radius
+                mComplications.put(id, Rect(left, top, right, bottom))
             }
         }
 
@@ -287,10 +289,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             for (id in Constants.COMPLICATION_IDS) {
                 complicationData = mActiveComplicationDataSparseArray.get(id)
                 if (complicationData != null && complicationData.isActive(currentTimeMillis)) {
-
-                    val origin = mComplications.getValue(id)[0]
-                    val center = mComplications.getValue(id)[1]
-                    val render = Render(canvas, origin, center, currentTimeMillis, mPaints, complicationData)
+                    val render = Render(canvas, mComplications.getValue(id), currentTimeMillis, mPaints, complicationData)
                     val renderer = mComplicationRenderFactory?.renderFor(complicationData.type)
                     if (isAmbient) {
                         renderer?.ambientRender(render)

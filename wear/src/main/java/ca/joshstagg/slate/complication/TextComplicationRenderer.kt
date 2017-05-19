@@ -13,6 +13,16 @@ internal class TextComplicationRenderer(val context: Context) : CircularComplica
     // Keep the main location and size/positional rendering here
     override fun render(render: Render) {
         super.render(render)
+        renderText(render)
+    }
+
+    // todo should also check burn-in to remove text
+    override fun ambientRender(render: Render) {
+        super.ambientRender(render)
+        renderText(render)
+    }
+
+    private fun renderText(render: Render) {
         val mainText = render.complicationData.shortText
         val subText = render.complicationData.shortTitle
 
@@ -26,11 +36,10 @@ internal class TextComplicationRenderer(val context: Context) : CircularComplica
             complicationMessage = TextUtils.concat(complicationMessage, " ", subText.getText(context, render.currentTimeMills))
         }
 
-        //Log.d(TAG, "Com id: " + COMPLICATION_IDS[i] + "\t" + complicationMessage);
         val textWidth = render.paints.complication.measureText(complicationMessage, 0, complicationMessage.length)
         val textHeight = render.paints.complication.textSize
-        val x = render.center.x - textWidth / 2
-        val y = render.center.y + textHeight / 3
+        val x = render.rect.centerX() - textWidth / 2
+        val y = render.rect.centerY() + textHeight / 3
 
         render.canvas.drawText(complicationMessage, 0, complicationMessage.length, x, y, render.paints.complication)
     }
