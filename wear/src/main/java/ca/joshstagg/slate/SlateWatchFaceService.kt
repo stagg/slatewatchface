@@ -15,7 +15,6 @@ import android.os.Message
 import android.support.v4.content.ContextCompat
 import android.support.wearable.complications.ComplicationData
 import android.support.wearable.complications.ComplicationHelperActivity
-import android.support.wearable.complications.SystemProviders
 import android.support.wearable.watchface.CanvasWatchFaceService
 import android.support.wearable.watchface.WatchFaceService
 import android.support.wearable.watchface.WatchFaceStyle
@@ -45,7 +44,9 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         private var mSlateTime: SlateTime? = null
         private var mBackgroundBitmap: Bitmap? = null
         private var mBackgroundScaledBitmap: Bitmap? = null
-        private var mComplicationRenderFactory: ComplicationRenderFactory? = null
+        private val mComplicationRenderFactory by lazy {
+            ComplicationRenderFactory(mContext)
+        }
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
          * disable anti-aliasing in ambient mode.
@@ -55,6 +56,8 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
 
         private var mWidth: Int = 0
         private var mHeight: Int = 0
+
+        private val clearClip = Rect()
 
         private var mActiveComplicationDataSparseArray: SparseArray<ComplicationData> = SparseArray(Constants.COMPLICATION_IDS.size)
 
@@ -76,17 +79,24 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                     .build())
 
             mSlateTime = SlateTime(mContext)
-            mComplicationRenderFactory = ComplicationRenderFactory(mContext)
             mBackgroundBitmap = (ContextCompat.getDrawable(mContext, R.drawable.bg) as BitmapDrawable).bitmap
 
             createComplications()
         }
 
         private fun createComplications() {
-            setDefaultSystemComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, SystemProviders.WATCH_BATTERY, ComplicationData.TYPE_SHORT_TEXT)
-            setDefaultSystemComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, SystemProviders.DATE, ComplicationData.TYPE_SHORT_TEXT)
-            setDefaultSystemComplicationProvider(Constants.TOP_DIAL_COMPLICATION, SystemProviders.UNREAD_NOTIFICATION_COUNT, ComplicationData.TYPE_SHORT_TEXT)
-            setDefaultSystemComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, SystemProviders.WORLD_CLOCK, ComplicationData.TYPE_SHORT_TEXT)
+            val cnL = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.SmallImageProviderService")
+            val cnR = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.ShortTextProviderService")
+            val cnT = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.IconProviderService")
+            val cnB = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.RangedValueProviderService")
+            setDefaultComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, cnL, ComplicationData.TYPE_SMALL_IMAGE)
+            setDefaultComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, cnR, ComplicationData.TYPE_SHORT_TEXT)
+            setDefaultComplicationProvider(Constants.TOP_DIAL_COMPLICATION, cnT, ComplicationData.TYPE_ICON)
+            setDefaultComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, cnB, ComplicationData.TYPE_RANGED_VALUE)
+//            setDefaultSystemComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, SystemProviders.WATCH_BATTERY, ComplicationData.TYPE_ICON)
+//            setDefaultSystemComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, SystemProviders.DATE, ComplicationData.TYPE_SHORT_TEXT)
+//            setDefaultSystemComplicationProvider(Constants.TOP_DIAL_COMPLICATION, SystemProviders.UNREAD_NOTIFICATION_COUNT, ComplicationData.TYPE_SHORT_TEXT)
+//            setDefaultSystemComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, SystemProviders.WORLD_CLOCK, ComplicationData.TYPE_SHORT_TEXT)
             setActiveComplications(*Constants.COMPLICATION_IDS)
         }
 
@@ -290,14 +300,16 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             for (id in Constants.COMPLICATION_IDS) {
                 complicationData = mActiveComplicationDataSparseArray.get(id)
                 if (complicationData != null && complicationData.isActive(currentTimeMillis)) {
-                    val render = Render(canvas, mComplications.getValue(id), currentTimeMillis, mPaints, complicationData)
-                    val renderer = mComplicationRenderFactory?.renderFor(complicationData.type)
+                    canvas.save()
+                    val rect = mComplications.getValue(id)
+                    val render = Render(canvas, rect, currentTimeMillis, mPaints, complicationData)
+                    val renderer = mComplicationRenderFactory.renderFor(complicationData.type)
                     if (isAmbient) {
-                        renderer?.ambientRender(render)
+                        renderer.ambientRender(render)
                     } else {
-                        renderer?.render(render)
+                        renderer.render(render)
                     }
-
+                    canvas.restore()
                 }
             }
         }

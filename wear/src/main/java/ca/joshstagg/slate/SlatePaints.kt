@@ -24,7 +24,7 @@ internal class SlatePaints {
     private val mTickColor = 0x64D5D5D6
     private val mPrimaryHandColor = 0xfff5f5f5.toInt()
     private val mShadowColor = 0xaa000000.toInt()
-    private val mComplicationColor = 0x80FFFFFF.toInt()
+    val complicationColor = 0x80FFFFFF.toInt()
 
     init {
         hour.color = mPrimaryHandColor
@@ -55,19 +55,19 @@ internal class SlatePaints {
         tick.isAntiAlias = true
         tick.setShadowLayer(1f, 0f, 0f, mShadowColor)
 
-        complicationText.color = mComplicationColor
+        complicationText.color = complicationColor
         complicationText.textSize = Constants.COMPLICATION_TEXT_SIZE
         complicationText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationText.textAlign = Paint.Align.CENTER
         complicationText.isAntiAlias = true
 
-        complicationMainText.color = mComplicationColor
+        complicationMainText.color = complicationColor
         complicationMainText.textSize = Constants.COMPLICATION_MAIN_TEXT_SIZE
         complicationMainText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationMainText.textAlign = Paint.Align.CENTER
         complicationMainText.isAntiAlias = true
 
-        complicationSubText.color = mComplicationColor
+        complicationSubText.color = complicationColor
         complicationSubText.textSize = Constants.COMPLICATION_SUB_TEXT_SIZE
         complicationSubText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationSubText.textAlign = Paint.Align.CENTER
