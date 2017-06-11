@@ -5,14 +5,12 @@ import android.graphics.drawable.Icon
 
 internal class TextComplicationRenderer(val context: Context) : CircularComplicationRenderer() {
 
-    override fun render(render: Render) {
-        super.render(render)
+    override fun renderInBounds(render: Render) {
         renderText(render, render.complicationData.icon)
     }
 
     // todo should also check burn-in to remove text
-    override fun ambientRender(render: Render) {
-        super.ambientRender(render)
+    override fun ambientRenderInBounds(render: Render) {
         renderText(render, render.complicationData.burnInProtectionIcon)
     }
 
@@ -28,15 +26,15 @@ internal class TextComplicationRenderer(val context: Context) : CircularComplica
         if (icon != null) {
             val drawable = icon.loadDrawable(context)
             val rect = render.rect
-            val w = rect.width() * 3 / 8
-            val hOff = rect.height() * 1 / 8
+            val widthOffset = rect.width() * 3 / 8
+            val heightOffset = rect.height() * 1 / 8
 
             drawable.setTint(render.paints.complicationColor)
-            drawable.setBounds(rect.left + w, rect.top + 2 * hOff, rect.right - w, rect.bottom - 4 * hOff)
+            drawable.setBounds(rect.left + widthOffset, rect.top + 2 * heightOffset, rect.right - widthOffset, rect.bottom - 4 * heightOffset)
             drawable.draw(render.canvas)
 
             val y = render.rect.centerY().toFloat()
-            render.canvas.drawText(mainMessage, 0, mainMessage.length, x, y + 2 * hOff, render.paints.complicationMainText)
+            render.canvas.drawText(mainMessage, 0, mainMessage.length, x, y + 2 * heightOffset, render.paints.complicationMainText)
         } else if (subText != null) {
             val subMessage = subText.getText(context, render.currentTimeMills)
             val y = render.rect.centerY().toFloat()

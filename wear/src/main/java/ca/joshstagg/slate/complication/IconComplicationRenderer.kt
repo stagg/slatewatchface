@@ -5,15 +5,13 @@ import android.graphics.drawable.Icon
 
 internal class IconComplicationRenderer(val context: Context) : CircularComplicationRenderer() {
 
-    override fun render(render: Render) {
-        super.render(render)
+    override fun renderInBounds(render: Render) {
         render.complicationData.icon?.let {
             renderIcon(render, it)
         }
     }
 
-    override fun ambientRender(render: Render) {
-        super.ambientRender(render)
+    override fun ambientRenderInBounds(render: Render) {
         render.complicationData.burnInProtectionIcon?.let {
             renderIcon(render, it)
         }

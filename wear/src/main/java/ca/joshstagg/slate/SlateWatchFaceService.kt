@@ -57,8 +57,6 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         private var mWidth: Int = 0
         private var mHeight: Int = 0
 
-        private val clearClip = Rect()
-
         private var mActiveComplicationDataSparseArray: SparseArray<ComplicationData> = SparseArray(Constants.COMPLICATION_IDS.size)
 
         init {
@@ -84,11 +82,13 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             createComplications()
         }
 
+        val PROVIDER_TEST_SUITE = "com.example.android.wearable.wear.wearcomplicationproviderstestsuite"
+
         private fun createComplications() {
-            val cnL = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.SmallImageProviderService")
-            val cnR = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.ShortTextProviderService")
-            val cnT = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.IconProviderService")
-            val cnB = ComponentName("com.example.android.wearable.wear.wearcomplicationproviderstestsuite", "com.example.android.wearable.wear.wearcomplicationproviderstestsuite.RangedValueProviderService")
+            val cnL = ComponentName(PROVIDER_TEST_SUITE, "$PROVIDER_TEST_SUITE.SmallImageProviderService")
+            val cnR = ComponentName(PROVIDER_TEST_SUITE, "$PROVIDER_TEST_SUITE.ShortTextProviderService")
+            val cnT = ComponentName(PROVIDER_TEST_SUITE, "$PROVIDER_TEST_SUITE.IconProviderService")
+            val cnB = ComponentName(PROVIDER_TEST_SUITE, "$PROVIDER_TEST_SUITE.RangedValueProviderService")
             setDefaultComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, cnL, ComplicationData.TYPE_SMALL_IMAGE)
             setDefaultComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, cnR, ComplicationData.TYPE_SHORT_TEXT)
             setDefaultComplicationProvider(Constants.TOP_DIAL_COMPLICATION, cnT, ComplicationData.TYPE_ICON)
