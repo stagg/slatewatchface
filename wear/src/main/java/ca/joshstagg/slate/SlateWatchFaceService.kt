@@ -24,6 +24,7 @@ import android.view.Gravity
 import android.view.SurfaceHolder
 import ca.joshstagg.slate.complication.ComplicationRenderFactory
 import ca.joshstagg.slate.complication.Render
+import ca.joshstagg.slate.config.Config
 
 /**
  * Slate ca.joshstagg.slate
@@ -41,7 +42,9 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         private val mComplications = mutableMapOf<Int, Rect>()
 
         private val mPaints: SlatePaints = SlatePaints()
-        private var mSlateTime: SlateTime? = null
+        private val mSlateTime: SlateTime by lazy {
+            SlateTime(mContext)
+        }
         private var mBackgroundBitmap: Bitmap? = null
         private var mBackgroundScaledBitmap: Bitmap? = null
         private val mComplicationRenderFactory by lazy {
@@ -57,7 +60,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         private var mWidth: Int = 0
         private var mHeight: Int = 0
 
-        private var mActiveComplicationDataSparseArray: SparseArray<ComplicationData> = SparseArray(Constants.COMPLICATION_IDS.size)
+        private var mActiveComplicationDataSparseArray: SparseArray<ComplicationData?> = SparseArray(Constants.COMPLICATION_IDS.size)
 
         init {
             mUpdateTimeHandler = EngineHandler(this)
@@ -75,10 +78,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                     .setStatusBarGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP)
                     .setAcceptsTapEvents(true)
                     .build())
-
-            mSlateTime = SlateTime(mContext)
             mBackgroundBitmap = (ContextCompat.getDrawable(mContext, R.drawable.bg) as BitmapDrawable).bitmap
-
             createComplications()
         }
 
@@ -127,31 +127,18 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         }
 
         private fun getTappedComplicationId(x: Int, y: Int): Int {
-            var complicationData: ComplicationData?
             val currentTimeMillis = System.currentTimeMillis()
-            val complicationBoundingRect = Rect(0, 0, 0, 0)
-
             for (id in Constants.COMPLICATION_IDS) {
-                complicationData = mActiveComplicationDataSparseArray.get(id)
-
-                if (null != complicationData
-                        && complicationData.isActive(currentTimeMillis)
-                        && complicationData.type != ComplicationData.TYPE_NOT_CONFIGURED
-                        && complicationData.type != ComplicationData.TYPE_EMPTY) {
-
-
-                    val rect = mComplications.getValue(id)
-//                    val top = rect.left - Constants.COMPLICATION_TAP_BUFFER
-//                    val left = rect.top - Constants.COMPLICATION_TAP_BUFFER
-//                    val right = rect.right + Constants.COMPLICATION_TAP_BUFFER
-//                    val bottom = rect.bottom + Constants.COMPLICATION_TAP_BUFFER
-
-                    complicationBoundingRect.set(rect)
-
-                    if (complicationBoundingRect.width() > 0 && complicationBoundingRect.contains(x, y)) {
-                        return id
-                    }
-                }
+                mActiveComplicationDataSparseArray.get(id)
+                        ?.takeUnless { it.type == ComplicationData.TYPE_NOT_CONFIGURED }
+                        ?.takeUnless { it.type == ComplicationData.TYPE_EMPTY }
+                        ?.takeIf { it.isActive(currentTimeMillis) }
+                        ?.let {
+                            val rect = mComplications.getValue(id)
+                            if (rect.width() > 0 && rect.contains(x, y)) {
+                                return id
+                            }
+                        }
             }
             return -1
         }
@@ -169,18 +156,12 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                     } catch (e: PendingIntent.CanceledException) {
                         Log.e(TAG, "On complication tap action error " + e)
                     }
-
                 } else if (complicationData.type == ComplicationData.TYPE_NO_PERMISSION) {
-
-                    // Watch face does not have permission to receive complication data, so launch
-                    // permission request.
+                    // Watch face does not have permission to receive complication data, so launch permission request.
                     val componentName = ComponentName(applicationContext, SlateWatchFaceService::class.java)
-
                     val permissionRequestIntent = ComplicationHelperActivity.createPermissionRequestHelperIntent(applicationContext, componentName)
-
                     startActivity(permissionRequestIntent)
                 }
-
             }
         }
 
@@ -279,7 +260,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             val centerY = height / 2f
 
             val isAmbient = isInAmbientMode
-            val calendar = mSlateTime?.timeNow ?: Calendar.getInstance()
+            val calendar = mSlateTime.timeNow
 
             drawBackground(canvas, isAmbient)
             drawComplications(canvas, isAmbient, calendar.timeInMillis)
@@ -296,21 +277,21 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         }
 
         private fun drawComplications(canvas: Canvas, isAmbient: Boolean, currentTimeMillis: Long) {
-            var complicationData: ComplicationData?
             for (id in Constants.COMPLICATION_IDS) {
-                complicationData = mActiveComplicationDataSparseArray.get(id)
-                if (complicationData != null && complicationData.isActive(currentTimeMillis)) {
-                    canvas.save()
-                    val rect = mComplications.getValue(id)
-                    val render = Render(canvas, rect, currentTimeMillis, mPaints, complicationData)
-                    val renderer = mComplicationRenderFactory.renderFor(complicationData.type)
-                    if (isAmbient) {
-                        renderer.ambientRender(render)
-                    } else {
-                        renderer.render(render)
-                    }
-                    canvas.restore()
-                }
+                mActiveComplicationDataSparseArray.get(id)
+                        ?.takeIf { complicationData -> complicationData.isActive(currentTimeMillis) }
+                        ?.let { complicationData ->
+                            canvas.save()
+                            val rect = mComplications.getValue(id)
+                            val render = Render(canvas, rect, currentTimeMillis, mPaints, complicationData)
+                            val renderer = mComplicationRenderFactory.rendererFor(complicationData.type)
+                            if (isAmbient) {
+                                renderer.ambientRender(render)
+                            } else {
+                                renderer.render(render)
+                            }
+                            canvas.restore()
+                        }
             }
         }
 
@@ -323,7 +304,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         }
 
         private fun drawHands(canvas: Canvas, isAmbient: Boolean, calendar: Calendar, centerX: Float, centerY: Float) {
-            val config = Slate.instance?.configService?.config
+            val config = Slate.instance?.configService?.config ?: Config()
 
             val milliRotate = calendar.timeInMillis % 60000 / 1000f / 30f * Math.PI.toFloat()
             val secRotate = calendar.get(Calendar.SECOND) / 30f * Math.PI.toFloat()
@@ -346,9 +327,9 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             canvas.drawCircle(centerX, centerY, 10f, mPaints.center)
 
             if (!isAmbient) {
-                mPaints.accentHandColor = config?.accentColor ?: Constants.ACCENT_COLOR_DEFAULT
+                mPaints.accentHandColor = config.accentColor
 
-                val rotate = if (config?.isSmoothMovement ?: Constants.SMOOTH_MOVEMENT_DEFAULT) milliRotate else secRotate
+                val rotate = if (config.smoothMovement) milliRotate else secRotate
                 val secStartX = Math.sin(rotate.toDouble()).toFloat() * -40
                 val secStartY = (-Math.cos(rotate.toDouble())).toFloat() * -40
                 val secX = Math.sin(rotate.toDouble()).toFloat() * secLength
@@ -372,10 +353,10 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             super.onVisibilityChanged(visible)
             if (visible) {
                 Slate.instance?.configService?.connect()
-                mSlateTime?.registerReceiver()
-                mSlateTime?.reset()
+                mSlateTime.registerReceiver()
+                mSlateTime.reset()
             } else {
-                mSlateTime?.unregisterReceiver()
+                mSlateTime.unregisterReceiver()
                 Slate.instance?.configService?.disconnect()
             }
             restartTimer()
@@ -412,7 +393,8 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         fun updateTime() {
             invalidate()
             if (shouldTimerBeRunning()) {
-                val updateRate = Slate.instance?.configService?.config?.updateRate ?: Constants.INTERACTIVE_UPDATE_RATE_MS
+                val config = Slate.instance?.configService?.config ?: Config()
+                val updateRate = config.updateRate
                 val delayMs = updateRate - System.currentTimeMillis() % updateRate
                 mUpdateTimeHandler.sendEmptyMessageDelayed(Constants.MSG_UPDATE_TIME, delayMs)
             }

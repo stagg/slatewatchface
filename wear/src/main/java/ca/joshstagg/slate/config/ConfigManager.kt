@@ -1,4 +1,4 @@
-package ca.joshstagg.slate
+package ca.joshstagg.slate.config
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import ca.joshstagg.slate.Constants
 import ca.joshstagg.slate.Constants.PATH_WITH_FEATURE
 import ca.joshstagg.slate.Constants.SCHEME_WEAR
+import ca.joshstagg.slate.Logger
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.*
 import com.google.android.gms.wearable.*
@@ -139,7 +141,7 @@ class ConfigManager internal constructor(private val mContext: Context) :
                     this.config.accentColor = color
                 }
             }
-            Constants.KEY_SMOOTH_MODE -> this.config.setSmoothMode(config.getBoolean(key))
+            Constants.KEY_SMOOTH_MODE -> this.config.smoothMovement = config.getBoolean(key)
             else -> Logger.d(TAG, "Ignoring unknown config key: " + key)
         }
     }

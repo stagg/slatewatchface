@@ -5,25 +5,24 @@ import android.graphics.drawable.Icon
 
 internal class IconComplicationRenderer(val context: Context) : CircularComplicationRenderer() {
 
-    override fun renderInBounds(render: Render) {
-        render.complicationData.icon?.let {
-            renderIcon(render, it)
+    override fun Render.renderInBounds() {
+        complicationData.icon?.let {
+            renderIcon(it)
         }
     }
 
-    override fun ambientRenderInBounds(render: Render) {
-        render.complicationData.burnInProtectionIcon?.let {
-            renderIcon(render, it)
+    override fun Render.ambientRenderInBounds() {
+        complicationData.burnInProtectionIcon?.let {
+            renderIcon(it)
         }
     }
 
-    private fun renderIcon(render: Render, icon: Icon) {
+    private fun Render.renderIcon(icon: Icon) {
         val drawable = icon.loadDrawable(context)
-        val rect = render.rect
         val w = rect.width() / 3
         val h = rect.height() / 3
-        drawable.setTint(render.paints.complicationColor)
+        drawable.setTint(paints.complicationTint)
         drawable.setBounds(rect.left + w, rect.top + h, rect.right - w, rect.bottom - h)
-        drawable.draw(render.canvas)
+        drawable.draw(canvas)
     }
 }

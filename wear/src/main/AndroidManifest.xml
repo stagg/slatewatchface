@@ -43,7 +43,7 @@
         <activity android:name="android.support.wearable.complications.ComplicationHelperActivity"/>
 
         <activity
-            android:name=".SlateWatchFaceWearablePrefActivity"
+            android:name=".config.SlateWearableConfigActivity"
             android:label="@string/slate_config_name">
             <intent-filter>
                 <action android:name="ca.joshstagg.CONFIG_SLATE"/>

@@ -13,6 +13,8 @@ internal class SlatePaints {
     val complicationText: Paint = Paint()
     val complicationMainText: Paint = Paint()
     val complicationSubText: Paint = Paint()
+    val complicationEdge: Paint = Paint()
+    val complicationSecondary: Paint = Paint()
 
     var accentHandColor = Constants.ACCENT_COLOR_DEFAULT
         set(value) {
@@ -24,7 +26,12 @@ internal class SlatePaints {
     private val mTickColor = 0x64D5D5D6
     private val mPrimaryHandColor = 0xfff5f5f5.toInt()
     private val mShadowColor = 0xaa000000.toInt()
-    val complicationColor = 0x80FFFFFF.toInt()
+    private val primaryComplicationColor = 0x80FFFFFF.toInt()
+
+    val complicationTint: Int
+        get() {
+            return primaryComplicationColor
+        }
 
     init {
         hour.color = mPrimaryHandColor
@@ -55,23 +62,37 @@ internal class SlatePaints {
         tick.isAntiAlias = true
         tick.setShadowLayer(1f, 0f, 0f, mShadowColor)
 
-        complicationText.color = complicationColor
+        complicationText.color = primaryComplicationColor
         complicationText.textSize = Constants.COMPLICATION_TEXT_SIZE
         complicationText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationText.textAlign = Paint.Align.CENTER
         complicationText.isAntiAlias = true
 
-        complicationMainText.color = complicationColor
+        complicationMainText.color = primaryComplicationColor
         complicationMainText.textSize = Constants.COMPLICATION_MAIN_TEXT_SIZE
         complicationMainText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationMainText.textAlign = Paint.Align.CENTER
         complicationMainText.isAntiAlias = true
 
-        complicationSubText.color = complicationColor
+        complicationSubText.color = primaryComplicationColor
         complicationSubText.textSize = Constants.COMPLICATION_SUB_TEXT_SIZE
         complicationSubText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationSubText.textAlign = Paint.Align.CENTER
         complicationSubText.isAntiAlias = true
+
+        complicationEdge.setARGB(255, 80, 80, 80)
+        complicationEdge.strokeCap = Paint.Cap.ROUND
+        complicationEdge.strokeJoin = Paint.Join.ROUND
+        complicationEdge.style = Paint.Style.STROKE
+        complicationEdge.strokeWidth = 4f
+        complicationEdge.isAntiAlias = true
+
+        complicationSecondary.setARGB(255, 155, 155, 155)
+        complicationSecondary.strokeCap = Paint.Cap.ROUND
+        complicationSecondary.strokeJoin = Paint.Join.ROUND
+        complicationSecondary.style = Paint.Style.STROKE
+        complicationSecondary.strokeWidth = 4f
+        complicationSecondary.isAntiAlias = true
     }
 
     fun setAntiAlias(antiAlias: Boolean) {
@@ -83,5 +104,7 @@ internal class SlatePaints {
         complicationText.isAntiAlias = antiAlias
         complicationMainText.isAntiAlias = antiAlias
         complicationSubText.isAntiAlias = antiAlias
+        complicationEdge.isAntiAlias = antiAlias
+        complicationSecondary.isAntiAlias = antiAlias
     }
 }

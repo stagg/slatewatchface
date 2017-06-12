@@ -1,18 +1,16 @@
 package ca.joshstagg.slate
 
 import android.app.Application
+import ca.joshstagg.slate.config.ConfigManager
 
 class Slate : Application() {
-    var configService: ConfigManager? = null
-        private set
+
+    val configService: ConfigManager by lazy {
+        ConfigManager(this.applicationContext)
+    }
 
     init {
         instance = this
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        configService = ConfigManager(this.applicationContext)
     }
 
     companion object {
