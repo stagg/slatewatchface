@@ -38,8 +38,8 @@ class ConfigManager internal constructor(private val context: Context) :
 
     override fun onConnectionFailed(result: ConnectionResult) {}
 
-    override // DataApi.DataListener
-    fun onDataChanged(dataEvents: DataEventBuffer) {
+    // DataApi.DataListener
+    override fun onDataChanged(dataEvents: DataEventBuffer) {
         try {
             for (dataEvent in dataEvents) {
                 if (dataEvent.type != DataEvent.TYPE_CHANGED) {
@@ -65,7 +65,7 @@ class ConfigManager internal constructor(private val context: Context) :
         val configKeysToOverwrite = DataMap()
         when (key) {
             Constants.KEY_SECONDS_COLOR -> {
-                val color= sharedPreferences.getString(key, Constants.ACCENT_COLOR_STRING_DEFAULT)
+                val color = sharedPreferences.getString(key, Constants.ACCENT_COLOR_STRING_DEFAULT)
                 configKeysToOverwrite.putString(Constants.KEY_SECONDS_COLOR, color)
                 Logger.d(TAG, "Update config color:" + color)
             }

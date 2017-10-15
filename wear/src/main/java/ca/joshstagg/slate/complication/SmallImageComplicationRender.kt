@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Icon
 import android.support.wearable.complications.ComplicationData
 
-internal class SmallImageComplicationRender(val context: Context) : CircularComplicationRenderer() {
+internal class SmallImageComplicationRender(private val context: Context) : CircularComplicationRenderer() {
 
     override fun Render.renderInBounds() {
         complicationData.smallImage?.let {

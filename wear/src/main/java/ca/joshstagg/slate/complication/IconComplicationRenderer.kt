@@ -3,7 +3,7 @@ package ca.joshstagg.slate.complication
 import android.content.Context
 import android.graphics.drawable.Icon
 
-internal class IconComplicationRenderer(val context: Context) : CircularComplicationRenderer() {
+internal class IconComplicationRenderer(private val context: Context) : CircularComplicationRenderer() {
 
     override fun Render.renderInBounds() {
         complicationData.icon?.let {

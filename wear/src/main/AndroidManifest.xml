@@ -43,11 +43,11 @@
         <activity android:name="android.support.wearable.complications.ComplicationHelperActivity"/>
 
         <activity
-            android:name=".config.SlateWearableConfigActivity"
-            android:label="@string/slate_config_name">
+            android:name=".config.SlateConfigActivity"
+            android:label="@string/slate_config_name"
+            android:theme="@style/Theme.Wearable">
             <intent-filter>
                 <action android:name="ca.joshstagg.CONFIG_SLATE"/>
-
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
@@ -57,5 +57,8 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true"/>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="" />
     </application>
 </manifest>

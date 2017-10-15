@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Path
 import android.graphics.RectF
 
-internal class RangeComplicationRenderer(val context: Context) : CircularComplicationRenderer() {
+internal class RangeComplicationRenderer(private val context: Context) : CircularComplicationRenderer() {
 
     private val pathRange = Path()
     private val rectF = RectF()

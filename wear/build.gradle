@@ -33,21 +33,33 @@ android {
             versionNameSuffix = ".debug"
         }
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 dependencies {
-    // Wear
+    // Google
     provided 'com.google.android.wearable:wearable:2.0.5'
     compile 'com.google.android.support:wearable:2.0.5'
     compile 'com.google.android.gms:play-services-wearable:11.4.2'
 
+    // Support
+    compile 'com.android.support:palette-v7:26.0.0'
+    compile 'com.android.support:wear:26.0.0'
+
     // Config
     compile 'me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0'
+
+    // Logging
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"

@@ -11,7 +11,6 @@
     <string name="slate_show_date_summary_on">Shown</string>
     <string name="slate_show_date_summary_off">Hidden</string>
 
-
     <string-array name="color_array_icons">
         <item>@drawable/card_red</item>
         <item>@drawable/card_pink</item>
