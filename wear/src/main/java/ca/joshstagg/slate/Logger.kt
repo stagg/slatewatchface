@@ -16,10 +16,10 @@ internal object Logger {
     private fun isDebug(): Boolean {
         if (!set) {
             val o = getBuildConfigValue("DEBUG")
-            if (o == null) {
-                isDebug = false
+            isDebug = if (o == null) {
+                false
             } else {
-                isDebug = (o as Boolean)
+                (o as Boolean)
             }
             set = true
         }

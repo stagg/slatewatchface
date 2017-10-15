@@ -15,11 +15,11 @@ class SlateWearableConfigActivity : WearPreferenceActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
-        Slate.instance?.configService?.connect()
+        Slate.instance.configService.connect()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Slate.instance?.configService?.disconnect()
+        Slate.instance.configService.disconnect()
     }
 }

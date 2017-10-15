@@ -9,44 +9,44 @@ import android.icu.util.TimeZone
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-internal class SlateTime(private val mContext: Context) {
-    private val mCalendar = Calendar.getInstance()
-    private val mRegisteredReceivers = AtomicBoolean(false)
+internal class SlateTime(private val context: Context) {
+    private val calendar = Calendar.getInstance()
+    private val registeredReceivers = AtomicBoolean(false)
 
-    private val mTimeZoneReceiver = object : BroadcastReceiver() {
+    private val timeZoneReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            mCalendar.timeZone = TimeZone.getTimeZone(intent.getStringExtra("time-zone"))
+            calendar.timeZone = TimeZone.getTimeZone(intent.getStringExtra("time-zone"))
         }
     }
 
-    private val mDayChangeReceiver = object : BroadcastReceiver() {
+    private val dayChangeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            mCalendar.timeInMillis = System.currentTimeMillis()
+            calendar.timeInMillis = System.currentTimeMillis()
         }
     }
 
     val timeNow: Calendar
         get() {
-            mCalendar.timeInMillis = System.currentTimeMillis()
-            return mCalendar
+            calendar.timeInMillis = System.currentTimeMillis()
+            return calendar
         }
 
     fun reset() {
-        mCalendar.timeZone = TimeZone.getDefault()
-        mCalendar.timeInMillis = System.currentTimeMillis()
+        calendar.timeZone = TimeZone.getDefault()
+        calendar.timeInMillis = System.currentTimeMillis()
     }
 
     fun registerReceiver() {
-        if (!mRegisteredReceivers.getAndSet(true)) {
-            mContext.registerReceiver(mTimeZoneReceiver, IntentFilter(Intent.ACTION_TIMEZONE_CHANGED))
-            mContext.registerReceiver(mDayChangeReceiver, IntentFilter(Intent.ACTION_DATE_CHANGED))
+        if (!registeredReceivers.getAndSet(true)) {
+            context.registerReceiver(timeZoneReceiver, IntentFilter(Intent.ACTION_TIMEZONE_CHANGED))
+            context.registerReceiver(dayChangeReceiver, IntentFilter(Intent.ACTION_DATE_CHANGED))
         }
     }
 
     fun unregisterReceiver() {
-        if (mRegisteredReceivers.getAndSet(false)) {
-            mContext.unregisterReceiver(mTimeZoneReceiver)
-            mContext.unregisterReceiver(mDayChangeReceiver)
+        if (registeredReceivers.getAndSet(false)) {
+            context.unregisterReceiver(timeZoneReceiver)
+            context.unregisterReceiver(dayChangeReceiver)
         }
     }
 }

@@ -5,15 +5,15 @@ import ca.joshstagg.slate.config.ConfigManager
 
 class Slate : Application() {
 
-    val configService: ConfigManager by lazy {
-        ConfigManager(this.applicationContext)
+    companion object {
+        lateinit var instance: Slate
     }
 
     init {
         instance = this
     }
 
-    companion object {
-        var instance: Slate? = null
+    val configService: ConfigManager by lazy {
+        ConfigManager(this.applicationContext)
     }
 }

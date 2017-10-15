@@ -15,22 +15,22 @@ import com.google.android.gms.common.api.*
 import com.google.android.gms.wearable.*
 import java.util.concurrent.atomic.AtomicInteger
 
-class ConfigManager internal constructor(private val mContext: Context) :
+class ConfigManager internal constructor(private val context: Context) :
         DataApi.DataListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     internal val config: Config = Config()
-    private val mConnected = AtomicInteger(0)
-    private val mGoogleApiClient: GoogleApiClient = GoogleApiClient.Builder(mContext)
+    private val connected = AtomicInteger(0)
+    private val googleApiClient: GoogleApiClient = GoogleApiClient.Builder(context)
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(this)
             .addApi(Wearable.API)
             .build()
 
     override fun onConnected(connectionHint: Bundle?) {
-        Wearable.DataApi.addListener(mGoogleApiClient, this)
+        Wearable.DataApi.addListener(googleApiClient, this)
                 .setResultCallback { updateConfigOnConnected() }
     }
 
@@ -80,21 +80,21 @@ class ConfigManager internal constructor(private val mContext: Context) :
     }
 
     @Synchronized internal fun connect() {
-        mConnected.incrementAndGet()
-        if (!mGoogleApiClient.isConnected && !mGoogleApiClient.isConnecting) {
-            mGoogleApiClient.connect()
+        connected.incrementAndGet()
+        if (!googleApiClient.isConnected && !googleApiClient.isConnecting) {
+            googleApiClient.connect()
         }
-        PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(this)
     }
 
     @Synchronized internal fun disconnect() {
-        val connected = mConnected.decrementAndGet()
+        val connected = connected.decrementAndGet()
         if (connected < 1) {
-            if (mGoogleApiClient.isConnected) {
-                Wearable.DataApi.removeListener(mGoogleApiClient, this)
-                mGoogleApiClient.disconnect()
+            if (googleApiClient.isConnected) {
+                Wearable.DataApi.removeListener(googleApiClient, this)
+                googleApiClient.disconnect()
             }
-            PreferenceManager.getDefaultSharedPreferences(mContext).unregisterOnSharedPreferenceChangeListener(this)
+            PreferenceManager.getDefaultSharedPreferences(context).unregisterOnSharedPreferenceChangeListener(this)
         }
     }
 
@@ -177,7 +177,7 @@ class ConfigManager internal constructor(private val mContext: Context) :
      */
     private fun fetchConfigDataMap(): TransformedResult<DataApi.DataItemResult> {
         return Wearable.NodeApi
-                .getLocalNode(mGoogleApiClient)
+                .getLocalNode(googleApiClient)
                 .then<DataApi.DataItemResult>(object : ResultTransform<NodeApi.GetLocalNodeResult, DataApi.DataItemResult>() {
                     override fun onSuccess(getLocalNodeResult: NodeApi.GetLocalNodeResult): PendingResult<DataApi.DataItemResult>? {
                         val localNode = getLocalNodeResult.node.id
@@ -186,7 +186,7 @@ class ConfigManager internal constructor(private val mContext: Context) :
                                 .path(PATH_WITH_FEATURE)
                                 .authority(localNode)
                                 .build()
-                        return Wearable.DataApi.getDataItem(mGoogleApiClient, uri)
+                        return Wearable.DataApi.getDataItem(googleApiClient, uri)
                     }
                 })
     }
@@ -211,7 +211,7 @@ class ConfigManager internal constructor(private val mContext: Context) :
         val putDataMapRequest = PutDataMapRequest.create(PATH_WITH_FEATURE)
         val configToPut = putDataMapRequest.dataMap
         configToPut.putAll(newConfig)
-        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataMapRequest.asPutDataRequest())
+        Wearable.DataApi.putDataItem(googleApiClient, putDataMapRequest.asPutDataRequest())
     }
 
     private abstract inner class DataItemResultCallback : ResultCallbacks<DataApi.DataItemResult>() {
