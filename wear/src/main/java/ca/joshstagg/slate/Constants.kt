@@ -42,6 +42,7 @@ internal object Constants {
      */
     val KEY_SECONDS_COLOR = "SECONDS_COLOR_1_2_1"
     val KEY_SMOOTH_MODE = "SMOOTH_MODE"
+    val KEY_NOTIFICATION_DOT = "NOTIFICATION_DOT"
 
     /**
      * The path for the [DataItem] containing [SlateWatchFaceService] configuration.
@@ -51,8 +52,6 @@ internal object Constants {
 
 
     val ACCENT_COLOR_STRING_DEFAULT = "#FF5E35B1"
-    val ACCENT_COLOR_DEFAULT = Color.parseColor(ACCENT_COLOR_STRING_DEFAULT)
-    val SMOOTH_MOVEMENT_DEFAULT = false
 
     // Unique IDs for each complication.
     val LEFT_DIAL_COMPLICATION = 0

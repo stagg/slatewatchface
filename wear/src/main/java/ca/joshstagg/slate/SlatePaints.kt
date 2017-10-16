@@ -2,6 +2,7 @@ package ca.joshstagg.slate
 
 import android.graphics.Paint
 import android.graphics.Typeface
+import ca.joshstagg.slate.config.Config
 
 internal class SlatePaints {
 
@@ -16,7 +17,7 @@ internal class SlatePaints {
     val complicationEdge: Paint = Paint()
     val complicationSecondary: Paint = Paint()
 
-    var accentHandColor = Constants.ACCENT_COLOR_DEFAULT
+    var accentHandColor = Config().accentColor
         set(value) {
             if (field != value) {
                 field = value

@@ -14,6 +14,14 @@
         android:defaultValue="false"
         />
 
+    <SwitchPreference
+        android:key="NOTIFICATION_DOT"
+        android:title="@string/slate_smooth_mode"
+        android:summaryOn="@string/slate_smooth_mode_summary_on"
+        android:summaryOff="@string/slate_smooth_mode_summary_off"
+        android:defaultValue="false"
+        />
+
     <ListPreference
         android:key="SECONDS_COLOR_1_2_1"
         android:title="@string/slate_second_hand_color"

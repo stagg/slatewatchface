@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 The Android Open Source Project
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,22 +18,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/config_activity_background">
+
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
-        android:textSize="22sp"
-        android:textColor="@color/config_activity_header_text_color"
-        android:text="@string/slate_second_hand_color"
         android:fontFamily="sans-serif-condensed-light"
-        app:layout_box="left|top"
-        />
+        android:text="@string/slate_second_hand_color"
+        android:textColor="@color/config_activity_header_text_color"
+        android:textSize="22sp"
+        app:layout_box="left|top" />
+
     <android.support.wearable.view.WearableListView
         android:id="@+id/color_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        app:layout_box="left|right"/>
+        app:layout_box="left|right" />
 </android.support.wearable.view.BoxInsetLayout>

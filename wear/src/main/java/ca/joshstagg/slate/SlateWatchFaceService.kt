@@ -25,7 +25,6 @@ import android.view.Gravity
 import android.view.SurfaceHolder
 import ca.joshstagg.slate.complication.ComplicationRenderFactory
 import ca.joshstagg.slate.complication.Render
-import ca.joshstagg.slate.config.Config
 
 /**
  * Slate ca.joshstagg.slate
@@ -62,6 +61,8 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         private var height: Int = 0
 
         private var activeComplicationDataSparseArray: SparseArray<ComplicationData?> = SparseArray(Constants.COMPLICATION_IDS.size)
+
+        private var unreadNotificationCount = 0
 
         init {
             updateTimeHandler = EngineHandler(this)
@@ -187,6 +188,14 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             initializeComplications(width, height)
         }
 
+        override fun onUnreadCountChanged(count: Int) {
+            val config = Slate.instance.configService.config
+            if (config.notificationDot && unreadNotificationCount != count) {
+                unreadNotificationCount = count
+                invalidate()
+            }
+        }
+
         // Scale the background to fit.
         private fun initializeBackground(width: Int, height: Int) {
             if (null == backgroundScaledBitmap || backgroundScaledBitmap?.width != width || backgroundScaledBitmap?.height != height) {
@@ -267,6 +276,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             drawComplications(canvas, isAmbient, calendar.timeInMillis)
             drawTicks(canvas, isAmbient)
             drawHands(canvas, isAmbient, calendar, centerX, centerY)
+            drawUnreadIndicator(canvas, isAmbient)
         }
 
         private fun drawBackground(canvas: Canvas, isAmbient: Boolean) {
@@ -305,7 +315,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         }
 
         private fun drawHands(canvas: Canvas, isAmbient: Boolean, calendar: Calendar, centerX: Float, centerY: Float) {
-            val config = Slate.instance.configService?.config ?: Config()
+            val config = Slate.instance.configService.config
 
             val milliRotate = calendar.timeInMillis % 60000 / 1000f / 30f * Math.PI.toFloat()
             val secRotate = calendar.get(Calendar.SECOND) / 30f * Math.PI.toFloat()
@@ -342,6 +352,19 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                         centerY + secY, paints.second)
 
                 canvas.drawCircle(centerX, centerY, 6f, paints.second)
+            }
+        }
+
+        //todo Review
+        private fun drawUnreadIndicator(canvas: Canvas, isAmbient: Boolean) {
+            val config = Slate.instance.configService.config
+            if (config.notificationDot && unreadNotificationCount > -1) {
+                val width = canvas.width
+                val height = canvas.height
+                canvas.drawCircle((width / 2).toFloat(), (height - 40).toFloat(), 10f, paints.center)
+                if (!isAmbient) {
+                    canvas.drawCircle((width / 2).toFloat(), (height - 40).toFloat(), 4f, paints.second)
+                }
             }
         }
 

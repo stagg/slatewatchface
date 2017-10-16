@@ -1,16 +1,4 @@
 <resources>
-    <string name="app_name">Slate Watch Face</string>
-    <string name="analog_name">Slate</string>
-
-    <string name="slate_config_name">Configuration</string>
-    <string name="slate_second_hand_color">Color</string>
-    <string name="slate_smooth_mode">Movement</string>
-    <string name="slate_smooth_mode_summary_on">Smooth</string>
-    <string name="slate_smooth_mode_summary_off">Tick</string>
-    <string name="slate_show_date">Date</string>
-    <string name="slate_show_date_summary_on">Shown</string>
-    <string name="slate_show_date_summary_off">Hidden</string>
-
     <string-array name="color_array_icons">
         <item>@drawable/card_red</item>
         <item>@drawable/card_pink</item>
