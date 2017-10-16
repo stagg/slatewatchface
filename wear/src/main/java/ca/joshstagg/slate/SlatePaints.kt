@@ -4,7 +4,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import ca.joshstagg.slate.config.Config
 
-internal class SlatePaints {
+class SlatePaints {
 
     val hour: Paint = Paint()
     val minute: Paint = Paint()

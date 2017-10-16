@@ -1,7 +1,6 @@
 package ca.joshstagg.slate.config
 
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.Switch
@@ -20,12 +19,9 @@ class ConfigSwitchViewHolder(itemView: View, private val sharedPreferences: Shar
     private val summary: TextView = itemView.findViewById(R.id.config_summary)
 
     private lateinit var item: ConfigSwitch
-    private var switchThumb: Drawable? = null
-
 
     override fun bind(item: ConfigSwitch) {
         this.item = item
-        switchThumb = switch.thumbDrawable
         switch.isChecked = sharedPreferences.getBoolean(item.key, item.default)
         switch.setOnCheckedChangeListener(this)
         title.text = item.title
@@ -48,6 +44,5 @@ class ConfigSwitchViewHolder(itemView: View, private val sharedPreferences: Shar
 
     override fun recycle() {
         switch.setOnClickListener(null)
-        switch.thumbDrawable = switchThumb
     }
 }

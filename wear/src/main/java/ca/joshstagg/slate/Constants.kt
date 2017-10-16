@@ -34,7 +34,7 @@ internal object Constants {
      * second hand.
      */
     val INTERACTIVE_UPDATE_RATE_MS: Long = 1000
-    val INTERACTIVE_SMOOTH_UPDATE_RATE_MS: Long = 4
+    val INTERACTIVE_SMOOTH_UPDATE_RATE_MS: Long = 1000 / 30
 
     /**
      * The [DataMap] key for [SlateWatchFaceService] second digits color name.

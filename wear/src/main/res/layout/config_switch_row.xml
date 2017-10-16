@@ -4,11 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
+    android:paddingBottom="8dp"
     android:paddingEnd="@dimen/config_activity_padding"
     android:paddingStart="@dimen/config_activity_padding"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    >
+    android:paddingTop="8dp">
 
     <Switch
         android:id="@+id/config_switch"
@@ -46,6 +45,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:maxLines="1"
+            android:textColor="@color/secondary_text_light"
             android:textSize="@dimen/summary_text_size" />
 
     </LinearLayout>

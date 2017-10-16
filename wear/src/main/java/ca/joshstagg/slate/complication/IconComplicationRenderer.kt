@@ -18,11 +18,12 @@ internal class IconComplicationRenderer(private val context: Context) : Circular
     }
 
     private fun Render.renderIcon(icon: Icon) {
-        val drawable = icon.loadDrawable(context)
-        val w = rect.width() / 3
-        val h = rect.height() / 3
-        drawable.setTint(paints.complicationTint)
-        drawable.setBounds(rect.left + w, rect.top + h, rect.right - w, rect.bottom - h)
-        drawable.draw(canvas)
+        icon.loadDrawable(context)?.let {
+            val w = rect.width() / 3
+            val h = rect.height() / 3
+            it.setTint(paints.complicationTint)
+            it.setBounds(rect.left + w, rect.top + h, rect.right - w, rect.bottom - h)
+            it.draw(canvas)
+        }
     }
 }
