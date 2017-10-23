@@ -57,10 +57,28 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                     .setAcceptsTapEvents(true)
                     .build())
             watchEngine = WatchEngine(context, paints)
-            complicationEngine = ComplicationEngine(applicationContext, this, paints)
+            complicationEngine = ComplicationEngine(applicationContext, paints)
             notificationEngine = NotificationEngine(paints)
+            setTestComplications()
         }
 
+        private fun setTestComplications() {
+
+            val providerTestSuite = "com.example.android.wearable.wear.wearcomplicationproviderstestsuite"
+            val cnL = ComponentName(providerTestSuite, "$providerTestSuite.SmallImageProviderService")
+            val cnR = ComponentName(providerTestSuite, "$providerTestSuite.ShortTextProviderService")
+            val cnT = ComponentName(providerTestSuite, "$providerTestSuite.IconProviderService")
+            val cnB = ComponentName(providerTestSuite, "$providerTestSuite.RangedValueProviderService")
+            setDefaultComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, cnL, ComplicationData.TYPE_SMALL_IMAGE)
+            setDefaultComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, cnR, ComplicationData.TYPE_SHORT_TEXT)
+            setDefaultComplicationProvider(Constants.TOP_DIAL_COMPLICATION, cnT, ComplicationData.TYPE_ICON)
+            setDefaultComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, cnB, ComplicationData.TYPE_RANGED_VALUE)
+//        setDefaultSystemComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, SystemProviders.WATCH_BATTERY, ComplicationData.TYPE_ICON)
+//        setDefaultSystemComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, SystemProviders.DATE, ComplicationData.TYPE_SHORT_TEXT)
+//        setDefaultSystemComplicationProvider(Constants.TOP_DIAL_COMPLICATION, SystemProviders.UNREAD_NOTIFICATION_COUNT, ComplicationData.TYPE_SHORT_TEXT)
+//        setDefaultSystemComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, SystemProviders.WORLD_CLOCK, ComplicationData.TYPE_SHORT_TEXT)
+            setActiveComplications(*Constants.COMPLICATION_IDS)
+        }
 
         override fun onPropertiesChanged(properties: Bundle?) {
             super.onPropertiesChanged(properties)

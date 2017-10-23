@@ -65,7 +65,12 @@ internal object Constants {
     val COMPLICATION_IDS = intArrayOf(LEFT_DIAL_COMPLICATION, TOP_DIAL_COMPLICATION, RIGHT_DIAL_COMPLICATION, BOTTOM_DIAL_COMPLICATION)
 
     // Left and right dial supported types.
-    val COMPLICATION_SUPPORTED_TYPES = arrayOf(intArrayOf(ComplicationData.TYPE_SHORT_TEXT), intArrayOf(ComplicationData.TYPE_SHORT_TEXT))
+    val COMPLICATION_SUPPORTED_TYPES = intArrayOf(
+            ComplicationData.TYPE_RANGED_VALUE,
+            ComplicationData.TYPE_ICON,
+            ComplicationData.TYPE_SHORT_TEXT,
+            ComplicationData.TYPE_SMALL_IMAGE)
+
 
     val COMPLICATION_TEXT_SIZE = 24f
     val COMPLICATION_MAIN_TEXT_SIZE = 20f

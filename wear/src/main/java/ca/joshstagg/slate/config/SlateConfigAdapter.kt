@@ -33,7 +33,7 @@ class SlateConfigAdapter(private val data: List<ConfigItem<*>>) : RecyclerView.A
             1 -> ConfigSwitchViewHolder(inflater.inflate(R.layout.config_switch_row, parent, false), sharedPrefs)
             2 -> ConfigCheckBoxViewHolder(inflater.inflate(R.layout.config_checkbox_row, parent, false), sharedPrefs)
             3 -> ConfigColorViewHolder(inflater.inflate(R.layout.config_color_row, parent, false), sharedPrefs)
-            4 -> ConfigComplicationViewHolder(inflater.inflate(R.layout.config_complication_row, parent, false))
+            4 -> ConfigComplicationViewHolder(inflater.inflate(R.layout.config_complication_row, parent, false), sharedPrefs)
             else -> null
         }
     }

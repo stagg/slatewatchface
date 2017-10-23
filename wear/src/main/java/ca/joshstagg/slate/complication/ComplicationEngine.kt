@@ -18,9 +18,7 @@ import ca.joshstagg.slate.SlateWatchFaceService
  * Slate ca.joshstagg.slate
  * Copyright 2017  Josh Stagg
  */
-class ComplicationEngine(val context: Context,
-                         engine: SlateWatchFaceService.Engine,
-                         private val paints: SlatePaints) {
+class ComplicationEngine(val context: Context, private val paints: SlatePaints) {
 
     private val complications = mutableMapOf<Int, Rect>()
 
@@ -29,25 +27,6 @@ class ComplicationEngine(val context: Context,
     }
 
     private var activeComplicationDataSparseArray: SparseArray<ComplicationData?> = SparseArray(Constants.COMPLICATION_IDS.size)
-
-    private val providerTestSuite = "com.example.android.wearable.wear.wearcomplicationproviderstestsuite"
-
-
-    init {
-        val cnL = ComponentName(providerTestSuite, "$providerTestSuite.SmallImageProviderService")
-        val cnR = ComponentName(providerTestSuite, "$providerTestSuite.ShortTextProviderService")
-        val cnT = ComponentName(providerTestSuite, "$providerTestSuite.IconProviderService")
-        val cnB = ComponentName(providerTestSuite, "$providerTestSuite.RangedValueProviderService")
-        engine.setDefaultComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, cnL, ComplicationData.TYPE_SMALL_IMAGE)
-        engine.setDefaultComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, cnR, ComplicationData.TYPE_SHORT_TEXT)
-        engine.setDefaultComplicationProvider(Constants.TOP_DIAL_COMPLICATION, cnT, ComplicationData.TYPE_ICON)
-        engine.setDefaultComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, cnB, ComplicationData.TYPE_RANGED_VALUE)
-//        engine.setDefaultSystemComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, SystemProviders.WATCH_BATTERY, ComplicationData.TYPE_ICON)
-//        engine.setDefaultSystemComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, SystemProviders.DATE, ComplicationData.TYPE_SHORT_TEXT)
-//        engine.setDefaultSystemComplicationProvider(Constants.TOP_DIAL_COMPLICATION, SystemProviders.UNREAD_NOTIFICATION_COUNT, ComplicationData.TYPE_SHORT_TEXT)
-//        engine.setDefaultSystemComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, SystemProviders.WORLD_CLOCK, ComplicationData.TYPE_SHORT_TEXT)
-        engine.setActiveComplications(*Constants.COMPLICATION_IDS)
-    }
 
     fun initialize(width: Int, height: Int) {
         val radius: Int = width / 8
