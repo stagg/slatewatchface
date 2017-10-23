@@ -35,6 +35,15 @@ class ConfigManager internal constructor(private val context: Context) :
     val configItems by lazy {
         val config = Config()
         listOf(
+                ConfigComplication(key = Constants.KEY_COMPLICATIONS,
+                        title = "",
+                        default = Constants.COMPLICATION_IDS),
+                ConfigColor(key = Constants.KEY_SECONDS_COLOR,
+                        title = context.getString(R.string.slate_second_hand_color),
+                        default = Constants.ACCENT_COLOR_STRING_DEFAULT,
+                        defaultText = Constants.ACCENT_COLOR_STRING_NAME_DEFAULT,
+                        colorNames = context.resources.getStringArray(R.array.color_array_names),
+                        colorValues = context.resources.getStringArray(R.array.color_array)),
                 ConfigCheckBox(key = Constants.KEY_SMOOTH_MODE,
                         title = context.getString(R.string.slate_smooth_mode),
                         default = config.smoothMovement,
@@ -49,7 +58,6 @@ class ConfigManager internal constructor(private val context: Context) :
                         offText = context.getString(R.string.slate_notification_dot_summary_off))
         )
     }
-
 
     override fun onConnected(connectionHint: Bundle?) {
         Wearable.DataApi.addListener(googleApiClient, this)

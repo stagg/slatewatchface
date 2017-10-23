@@ -4,7 +4,10 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import ca.joshstagg.slate.config.Config
 
-class SlatePaints {
+class SlatePaints(scale: Float = 1f) {
+
+    val centerRadius = 10f * scale
+    val centerSecondRadius = 6f * scale
 
     val hour: Paint = Paint()
     val minute: Paint = Paint()
@@ -36,32 +39,32 @@ class SlatePaints {
 
     init {
         hour.color = mPrimaryHandColor
-        hour.strokeWidth = 9f
+        hour.strokeWidth = 9f * scale
         hour.isAntiAlias = true
         hour.strokeCap = Paint.Cap.BUTT
-        hour.setShadowLayer(5f, 0f, 0f, mShadowColor)
+        hour.setShadowLayer(5f * scale, 0f, 0f, mShadowColor)
 
         minute.color = mPrimaryHandColor
-        minute.strokeWidth = 9f
+        minute.strokeWidth = 9f * scale
         minute.isAntiAlias = true
         minute.strokeCap = Paint.Cap.BUTT
-        minute.setShadowLayer(4f, 0f, 0f, mShadowColor)
+        minute.setShadowLayer(4f * scale, 0f, 0f, mShadowColor)
 
         second.color = accentHandColor
-        second.strokeWidth = 4f
+        second.strokeWidth = 4f * scale
         second.isAntiAlias = true
         second.strokeCap = Paint.Cap.BUTT
-        second.setShadowLayer(6f, 0f, 0f, mShadowColor)
+        second.setShadowLayer(6f * scale, 0f, 0f, mShadowColor)
 
         center.color = mPrimaryHandColor
-        center.strokeWidth = 8f
+        center.strokeWidth = 8f * scale
         center.isAntiAlias = true
         center.strokeCap = Paint.Cap.BUTT
 
         tick.color = mTickColor
-        tick.strokeWidth = 4f
+        tick.strokeWidth = 4f * scale
         tick.isAntiAlias = true
-        tick.setShadowLayer(1f, 0f, 0f, mShadowColor)
+        tick.setShadowLayer(1f * scale, 0f, 0f, mShadowColor)
 
         complicationText.color = primaryComplicationColor
         complicationText.textSize = Constants.COMPLICATION_TEXT_SIZE
@@ -85,14 +88,14 @@ class SlatePaints {
         complicationEdge.strokeCap = Paint.Cap.ROUND
         complicationEdge.strokeJoin = Paint.Join.ROUND
         complicationEdge.style = Paint.Style.STROKE
-        complicationEdge.strokeWidth = 4f
+        complicationEdge.strokeWidth = 4f * scale
         complicationEdge.isAntiAlias = true
 
         complicationSecondary.setARGB(255, 155, 155, 155)
         complicationSecondary.strokeCap = Paint.Cap.ROUND
         complicationSecondary.strokeJoin = Paint.Join.ROUND
         complicationSecondary.style = Paint.Style.STROKE
-        complicationSecondary.strokeWidth = 4f
+        complicationSecondary.strokeWidth = 4f * scale
         complicationSecondary.isAntiAlias = true
     }
 

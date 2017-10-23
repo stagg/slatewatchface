@@ -25,4 +25,5 @@
     <dimen name="summary_text_size">14sp</dimen>
 
     <dimen name="config_activity_padding">24dp</dimen>
+    <dimen name="config_circular_color">40dp</dimen>
 </resources>

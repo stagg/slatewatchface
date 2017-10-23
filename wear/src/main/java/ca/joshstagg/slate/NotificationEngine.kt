@@ -22,10 +22,10 @@ class NotificationEngine(private val paints: SlatePaints) {
     fun drawUnreadIndicator(canvas: Canvas, isAmbient: Boolean) {
         val config = Slate.instance.configService.config
         if (!isAmbient && config.notificationDot && unreadNotificationCount > 0) {
-            val width = canvas.width
-            val height = canvas.height
-            canvas.drawCircle((width / 2).toFloat(), (height - 40).toFloat(), 10f, paints.center)
-            canvas.drawCircle((width / 2).toFloat(), (height - 40).toFloat(), 4f, paints.second)
+            val width = (canvas.width / 2).toFloat()
+            val height = (canvas.height - 36).toFloat()
+            canvas.drawCircle(width, height, 10f, paints.center)
+            canvas.drawCircle(width, height, 4f, paints.second)
         }
     }
 }

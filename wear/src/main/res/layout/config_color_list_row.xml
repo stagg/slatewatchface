@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingBottom="8dp"
+    android:paddingEnd="@dimen/config_activity_padding"
+    android:paddingStart="@dimen/config_activity_padding"
+    android:paddingTop="8dp"
+    >
+
+    <ImageView
+        android:id="@+id/config_color"
+        style="@style/Widget.ActionPage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/color_selection"
+        android:contentDescription="@string/slate_second_hand_color"
+        android:elevation="2dp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/config_title"
+        style="@style/Widget.WearDiag.TextView"
+        android:layout_toEndOf="@+id/config_color"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="2"
+        tools:text="Config switch option" />
+
+</RelativeLayout>
+

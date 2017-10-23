@@ -40,6 +40,7 @@ internal object Constants {
      * The [DataMap] key for [SlateWatchFaceService] second digits color name.
      * The color name must be a [String] recognized by [Color.parseColor].
      */
+    val KEY_COMPLICATIONS = "COMPLICATIONS"
     val KEY_SECONDS_COLOR = "SECONDS_COLOR_1_2_1"
     val KEY_SMOOTH_MODE = "SMOOTH_MODE"
     val KEY_NOTIFICATION_DOT = "NOTIFICATION_DOT"
@@ -52,6 +53,7 @@ internal object Constants {
 
 
     val ACCENT_COLOR_STRING_DEFAULT = "#FF5E35B1"
+    val ACCENT_COLOR_STRING_NAME_DEFAULT = "Deep Purple"
 
     // Unique IDs for each complication.
     val LEFT_DIAL_COMPLICATION = 0

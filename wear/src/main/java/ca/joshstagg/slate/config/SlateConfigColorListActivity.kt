@@ -11,32 +11,30 @@ import ca.joshstagg.slate.Slate
  * Slate ca.joshstagg.slate.config
  * Copyright 2017  Josh Stagg
  */
-class SlateConfigActivity : Activity() {
+class SlateConfigColorListActivity : Activity(), OnColorSelectedListener {
 
-    private lateinit var adapter : SlateConfigAdapter
+    private lateinit var configColor: ConfigColor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_slate_configuration)
-
-        adapter = SlateConfigAdapter(Slate.instance.configService.configItems)
+        setContentView(R.layout.activity_slate_color_list)
+        configColor = intent.getParcelableExtra("ITEM")
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.recycleChildrenOnDetach = true
 
-        val recyclerView: WearableRecyclerView = findViewById(R.id.config_recycler_view)
+        val recyclerView: WearableRecyclerView = findViewById(R.id.config_color_recycler_view)
         recyclerView.layoutManager = layoutManager
         recyclerView.isCircularScrollingGestureEnabled = true
         recyclerView.isEdgeItemsCenteringEnabled = true
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
-
+        recyclerView.adapter = SlateConfigColorListAdapter(configColor, this)
         Slate.instance.configService.connect()
     }
 
-    override fun onResume() {
-        super.onResume()
-        adapter.notifyDataSetChanged()
+    override fun onColorSelected(color: String) {
+        Slate.instance.configService.sharedPreferences.edit().putString(configColor.key, color).apply()
+        finish()
     }
 
     override fun onDestroy() {

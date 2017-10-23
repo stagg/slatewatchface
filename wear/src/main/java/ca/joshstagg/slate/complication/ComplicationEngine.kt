@@ -8,7 +8,6 @@ import android.graphics.Rect
 import android.icu.util.Calendar
 import android.support.wearable.complications.ComplicationData
 import android.support.wearable.complications.ComplicationHelperActivity
-import android.support.wearable.complications.SystemProviders
 import android.util.Log
 import android.util.SparseArray
 import ca.joshstagg.slate.Constants
@@ -43,10 +42,10 @@ class ComplicationEngine(val context: Context,
         engine.setDefaultComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, cnR, ComplicationData.TYPE_SHORT_TEXT)
         engine.setDefaultComplicationProvider(Constants.TOP_DIAL_COMPLICATION, cnT, ComplicationData.TYPE_ICON)
         engine.setDefaultComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, cnB, ComplicationData.TYPE_RANGED_VALUE)
-        engine.setDefaultSystemComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, SystemProviders.WATCH_BATTERY, ComplicationData.TYPE_ICON)
-        engine.setDefaultSystemComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, SystemProviders.DATE, ComplicationData.TYPE_SHORT_TEXT)
-        engine.setDefaultSystemComplicationProvider(Constants.TOP_DIAL_COMPLICATION, SystemProviders.UNREAD_NOTIFICATION_COUNT, ComplicationData.TYPE_SHORT_TEXT)
-        engine.setDefaultSystemComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, SystemProviders.WORLD_CLOCK, ComplicationData.TYPE_SHORT_TEXT)
+//        engine.setDefaultSystemComplicationProvider(Constants.LEFT_DIAL_COMPLICATION, SystemProviders.WATCH_BATTERY, ComplicationData.TYPE_ICON)
+//        engine.setDefaultSystemComplicationProvider(Constants.RIGHT_DIAL_COMPLICATION, SystemProviders.DATE, ComplicationData.TYPE_SHORT_TEXT)
+//        engine.setDefaultSystemComplicationProvider(Constants.TOP_DIAL_COMPLICATION, SystemProviders.UNREAD_NOTIFICATION_COUNT, ComplicationData.TYPE_SHORT_TEXT)
+//        engine.setDefaultSystemComplicationProvider(Constants.BOTTOM_DIAL_COMPLICATION, SystemProviders.WORLD_CLOCK, ComplicationData.TYPE_SHORT_TEXT)
         engine.setActiveComplications(*Constants.COMPLICATION_IDS)
     }
 
@@ -86,8 +85,8 @@ class ComplicationEngine(val context: Context,
         activeComplicationDataSparseArray.put(complicationId, complicationData)
     }
 
-    fun drawComplications(canvas: Canvas, isAmbient: Boolean,calendar: Calendar) {
-        val  currentTimeMillis = calendar.timeInMillis
+    fun drawComplications(canvas: Canvas, isAmbient: Boolean, calendar: Calendar) {
+        val currentTimeMillis = calendar.timeInMillis
         for (id in Constants.COMPLICATION_IDS) {
             activeComplicationDataSparseArray.get(id)
                     ?.takeIf { complicationData -> complicationData.isActive(currentTimeMillis) }
@@ -108,7 +107,7 @@ class ComplicationEngine(val context: Context,
 
     // Tap
     fun complicationTap(x: Int, y: Int) {
-        val tappedComplicationId =  getTappedComplicationId(x, y)
+        val tappedComplicationId = getTappedComplicationId(x, y)
         if (tappedComplicationId != -1) {
             onComplicationTap(tappedComplicationId)
         }

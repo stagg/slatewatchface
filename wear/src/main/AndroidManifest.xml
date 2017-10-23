@@ -53,12 +53,15 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".config.SlateConfigColorListActivity"
+            android:label="@string/slate_config_name"
+            android:theme="@style/Theme.Wearable">
+        </activity>
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true"/>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="" />
     </application>
 </manifest>

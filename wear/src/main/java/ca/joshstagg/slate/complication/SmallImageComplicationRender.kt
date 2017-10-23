@@ -16,16 +16,19 @@ internal class SmallImageComplicationRender(private val context: Context) : Circ
     }
 
     private fun Render.renderPhoto(icon: Icon) {
-        val drawable = icon.loadDrawable(context)
-        drawable.bounds = rect
-        drawable.draw(canvas)
+        icon.loadDrawable(context)?.let { drawable ->
+            drawable.bounds = rect
+            drawable.draw(canvas)
+        }
     }
 
     private fun Render.renderIcon(icon: Icon) {
-        val drawable = icon.loadDrawable(context)
-        val w = rect.width() / 5
-        val h = rect.height() / 5
-        drawable.setBounds(rect.left + w, rect.top + h, rect.right - w, rect.bottom - h)
-        drawable.draw(canvas)
+        icon.loadDrawable(context)?.let { drawable ->
+            val w = rect.width() / 5
+            val h = rect.height() / 5
+            drawable.setBounds(rect.left + w, rect.top + h, rect.right - w, rect.bottom - h)
+            drawable.draw(canvas)
+        }
+
     }
 }

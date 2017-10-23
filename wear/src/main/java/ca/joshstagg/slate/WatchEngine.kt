@@ -92,9 +92,9 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
 
         val minX = Math.sin(minRot.toDouble()).toFloat() * minLength
         val minY = (-Math.cos(minRot.toDouble())).toFloat() * minLength
-        canvas.drawCircle(centerX, centerY, 10f, paints.minute)
+        canvas.drawCircle(centerX, centerY, paints.centerRadius, paints.minute)
         canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, paints.minute)
-        canvas.drawCircle(centerX, centerY, 10f, paints.center)
+        canvas.drawCircle(centerX, centerY,  paints.centerRadius, paints.center)
 
         if (!isAmbient) {
             paints.accentHandColor = config.accentColor
@@ -110,7 +110,7 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
                     centerX + secX,
                     centerY + secY, paints.second)
 
-            canvas.drawCircle(centerX, centerY, 6f, paints.second)
+            canvas.drawCircle(centerX, centerY, paints.centerSecondRadius, paints.second)
         }
     }
 }
