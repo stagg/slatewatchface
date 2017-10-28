@@ -15,6 +15,7 @@ internal fun Render.renderText(context: Context, icon: Icon?) {
     val x = rect.centerX().toFloat()
     var y = rect.centerY().toFloat()
 
+    var mainTextPaint = paints.complicationMainText
     when {
         icon != null -> {
             icon.loadDrawable(context)?.let { drawable->
@@ -29,6 +30,7 @@ internal fun Render.renderText(context: Context, icon: Icon?) {
                     top = 2 * heightOffset
                     bottom = 4 * heightOffset
                     y += 2 * heightOffset
+                    mainTextPaint = paints.complicationSubText
                 }
 
                 drawable.setTint(paints.complicationTint)
@@ -48,5 +50,5 @@ internal fun Render.renderText(context: Context, icon: Icon?) {
     }
 
     val text = mainText?.getText(context, currentTimeMills) ?: "--"
-    canvas.drawText(text, 0, text.length, x, y, paints.complicationMainText)
+    canvas.drawText(text, 0, text.length, x, y, mainTextPaint)
 }

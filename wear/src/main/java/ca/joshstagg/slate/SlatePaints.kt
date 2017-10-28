@@ -8,12 +8,13 @@ import ca.joshstagg.slate.config.Config
 class SlatePaints(context: Context, scaleFactor: Float = 1f) {
 
     private val scale: Float = scaleFactor * context.resources.displayMetrics.density
+    private val textScale = scaleFactor * context.resources.displayMetrics.scaledDensity
 
-    val centerRadius = 6f  * scale
-    val centerSecondRadius = 4f  * scale
+    val centerRadius = 6f * scale
+    val centerSecondRadius = 4f * scale
 
-    val notificationOuterRadius = 5f  * scale
-    val notificationInnerRadius = 3f  * scale
+    val notificationOuterRadius = 5f * scale
+    val notificationInnerRadius = 3f * scale
 
     val innerTickRadius = 9 * scale
     val largeInnerTickRadius = 21 * scale
@@ -24,6 +25,11 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
 
     val secStart = -20 * scale
     val notificationOffset = 18 * scale
+
+
+    private val complicationTextSize = 14f * textScale
+    private val complicationMainTextSize = 12f * textScale
+    private val complicationSubTextSize = 10f * textScale
 
     val hour: Paint = Paint()
     val minute: Paint = Paint()
@@ -83,24 +89,24 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
         tick.setShadowLayer(.5f * scale, 0f, 0f, mShadowColor)
 
         complicationText.color = primaryComplicationColor
-        complicationText.textSize = Constants.COMPLICATION_TEXT_SIZE
+        complicationText.textSize = complicationTextSize
         complicationText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationText.textAlign = Paint.Align.CENTER
         complicationText.isAntiAlias = true
 
         complicationMainText.color = primaryComplicationColor
-        complicationMainText.textSize = Constants.COMPLICATION_MAIN_TEXT_SIZE
+        complicationMainText.textSize = complicationMainTextSize
         complicationMainText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationMainText.textAlign = Paint.Align.CENTER
         complicationMainText.isAntiAlias = true
 
         complicationSubText.color = primaryComplicationColor
-        complicationSubText.textSize = Constants.COMPLICATION_SUB_TEXT_SIZE
+        complicationSubText.textSize = complicationSubTextSize
         complicationSubText.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         complicationSubText.textAlign = Paint.Align.CENTER
         complicationSubText.isAntiAlias = true
 
-        complicationEdge.setARGB(255, 30, 30, 30)
+        complicationEdge.setARGB(255, 50, 50, 50)
         complicationEdge.strokeCap = Paint.Cap.ROUND
         complicationEdge.strokeJoin = Paint.Join.ROUND
         complicationEdge.style = Paint.Style.STROKE

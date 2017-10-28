@@ -40,14 +40,13 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
     private val watchFace = ComponentName(context, SlateWatchFaceService::class.java)
 
     private val providerInfoRetriever = ProviderInfoRetriever(context, Executors.newCachedThreadPool())
-
     private val handlerThread = HandlerThread("WatchFacePreviewThread")
+
     private val previewHandler: PreviewHandler
 
     init {
         handlerThread.start()
         previewHandler = PreviewHandler(context, handlerThread.looper, holder)
-
         setZOrderOnTop(true)
         holder.addCallback(this)
         holder.setFormat(PixelFormat.TRANSPARENT)
@@ -56,7 +55,9 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
         setupComplication(Constants.RIGHT_DIAL_COMPLICATION)
         setupComplication(Constants.LEFT_DIAL_COMPLICATION)
         setupComplication(Constants.BOTTOM_DIAL_COMPLICATION)
+    }
 
+    override fun surfaceCreated(holder: SurfaceHolder) {
         providerInfoRetriever.init()
         providerInfoRetriever.retrieveProviderInfo(object : ProviderInfoRetriever.OnProviderInfoReceivedCallback() {
             override fun onProviderInfoReceived(complicationId: Int, providerInfo: ComplicationProviderInfo?) {
@@ -77,14 +78,7 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
                 }
             }
         }, watchFace, *Constants.COMPLICATION_IDS)
-    }
 
-    fun destroy() {
-        providerInfoRetriever.release()
-        handlerThread.quit()
-    }
-
-    override fun surfaceCreated(holder: SurfaceHolder) {
         setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 val msg = Message()
@@ -104,6 +98,7 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
+        providerInfoRetriever.release()
     }
 
     private fun setupComplication(complicationId: Int) {

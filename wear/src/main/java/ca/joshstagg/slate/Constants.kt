@@ -70,11 +70,5 @@ internal object Constants {
             ComplicationData.TYPE_ICON,
             ComplicationData.TYPE_SHORT_TEXT,
             ComplicationData.TYPE_SMALL_IMAGE)
-
-
-    val COMPLICATION_TEXT_SIZE = 24f
-    val COMPLICATION_MAIN_TEXT_SIZE = 20f
-    val COMPLICATION_SUB_TEXT_SIZE = 16f
-    val COMPLICATION_TAP_BUFFER = 40
 }
 

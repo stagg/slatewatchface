@@ -23,12 +23,11 @@ class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: Shar
 
     override fun recycle() {
         sharedPrefs.unregisterOnSharedPreferenceChangeListener(this)
-        preview.destroy()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key in listOf(Constants.KEY_NOTIFICATION_DOT, Constants.KEY_SECONDS_COLOR)) {
-            preview.invalidate()
+            preview.postInvalidate()
         }
     }
 
