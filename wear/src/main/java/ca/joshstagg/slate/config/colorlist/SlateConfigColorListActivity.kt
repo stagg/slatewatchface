@@ -1,4 +1,4 @@
-package ca.joshstagg.slate.config
+package ca.joshstagg.slate.config.colorlist
 
 import android.app.Activity
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.wear.widget.WearableRecyclerView
 import ca.joshstagg.slate.R
 import ca.joshstagg.slate.Slate
+import ca.joshstagg.slate.config.items.ConfigColor
 
 /**
  * Slate ca.joshstagg.slate.config

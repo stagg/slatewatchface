@@ -1,4 +1,4 @@
-package ca.joshstagg.slate.config
+package ca.joshstagg.slate.config.viewholder
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import ca.joshstagg.slate.R
+import ca.joshstagg.slate.config.colorlist.SlateConfigColorListActivity
+import ca.joshstagg.slate.config.items.ConfigColor
 
 /**
  * Slate ca.joshstagg.slate.config

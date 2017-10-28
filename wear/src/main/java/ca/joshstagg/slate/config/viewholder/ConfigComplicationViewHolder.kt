@@ -1,9 +1,11 @@
-package ca.joshstagg.slate.config
+package ca.joshstagg.slate.config.viewholder
 
 import android.content.SharedPreferences
 import android.view.View
 import ca.joshstagg.slate.Constants
 import ca.joshstagg.slate.R
+import ca.joshstagg.slate.config.WatchFacePreviewView
+import ca.joshstagg.slate.config.items.ConfigComplication
 
 /**
  * Slate ca.joshstagg.slate.config
@@ -21,6 +23,7 @@ class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: Shar
 
     override fun recycle() {
         sharedPrefs.unregisterOnSharedPreferenceChangeListener(this)
+        preview.destroy()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

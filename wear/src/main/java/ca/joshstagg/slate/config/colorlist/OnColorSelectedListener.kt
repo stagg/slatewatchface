@@ -1,4 +1,4 @@
-package ca.joshstagg.slate.config
+package ca.joshstagg.slate.config.colorlist
 
 /**
  * Slate ca.joshstagg.slate.config

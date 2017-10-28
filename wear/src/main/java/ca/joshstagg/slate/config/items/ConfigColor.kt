@@ -1,4 +1,4 @@
-package ca.joshstagg.slate.config
+package ca.joshstagg.slate.config.items
 
 import android.os.Parcel
 import android.os.Parcelable

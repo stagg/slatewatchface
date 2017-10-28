@@ -1,7 +1,8 @@
-package ca.joshstagg.slate.config
+package ca.joshstagg.slate.config.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import ca.joshstagg.slate.config.items.ConfigItem
 
 /**
  * Slate ca.joshstagg.slate.config

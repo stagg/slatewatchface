@@ -47,7 +47,6 @@ internal fun Render.renderText(context: Context, icon: Icon?) {
         else -> y += textHeight / 3
     }
 
-    mainText?.getText(context, currentTimeMills)?.let {
-        canvas.drawText(it, 0, it.length, x, y, paints.complicationMainText)
-    }
+    val text = mainText?.getText(context, currentTimeMills) ?: "--"
+    canvas.drawText(text, 0, text.length, x, y, paints.complicationMainText)
 }

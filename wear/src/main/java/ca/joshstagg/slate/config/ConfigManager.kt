@@ -11,6 +11,10 @@ import ca.joshstagg.slate.Constants.PATH_WITH_FEATURE
 import ca.joshstagg.slate.Constants.SCHEME_WEAR
 import ca.joshstagg.slate.Logger
 import ca.joshstagg.slate.R
+import ca.joshstagg.slate.config.items.ConfigCheckBox
+import ca.joshstagg.slate.config.items.ConfigColor
+import ca.joshstagg.slate.config.items.ConfigComplication
+import ca.joshstagg.slate.config.items.ConfigSwitch
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.*
 import com.google.android.gms.wearable.*

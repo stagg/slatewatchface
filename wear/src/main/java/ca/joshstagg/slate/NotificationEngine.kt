@@ -23,9 +23,9 @@ class NotificationEngine(private val paints: SlatePaints) {
         val config = Slate.instance.configService.config
         if (!isAmbient && config.notificationDot && unreadNotificationCount > 0) {
             val width = (canvas.width / 2).toFloat()
-            val height = (canvas.height - 36).toFloat()
-            canvas.drawCircle(width, height, 10f, paints.center)
-            canvas.drawCircle(width, height, 4f, paints.second)
+            val height = (canvas.height - paints.notificationOffset).toFloat()
+            canvas.drawCircle(width, height, paints.notificationOuterRadius, paints.center)
+            canvas.drawCircle(width, height, paints.notificationInnerRadius, paints.second)
         }
     }
 }

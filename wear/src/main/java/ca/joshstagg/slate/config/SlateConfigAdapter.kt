@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import ca.joshstagg.slate.R
 import ca.joshstagg.slate.Slate
+import ca.joshstagg.slate.config.items.*
+import ca.joshstagg.slate.config.viewholder.*
 
 /**
  * Slate ca.joshstagg.slate.config
@@ -19,8 +21,8 @@ class SlateConfigAdapter(private val data: List<ConfigItem<*>>) : RecyclerView.A
     override fun getItemViewType(position: Int): Int {
         val item = data[position]
         return when (item) {
-            is ConfigSwitch-> 1
-            is ConfigCheckBox-> 2
+            is ConfigSwitch -> 1
+            is ConfigCheckBox -> 2
             is ConfigColor -> 3
             is ConfigComplication -> 4
             else -> 0

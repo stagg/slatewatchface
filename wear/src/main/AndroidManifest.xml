@@ -54,7 +54,7 @@
         </activity>
 
         <activity
-            android:name=".config.SlateConfigColorListActivity"
+            android:name=".config.colorlist.SlateConfigColorListActivity"
             android:label="@string/slate_config_name"
             android:theme="@style/Theme.Wearable">
         </activity>

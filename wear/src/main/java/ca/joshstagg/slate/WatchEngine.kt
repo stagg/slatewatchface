@@ -38,8 +38,8 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
         val centerX = width / 2f
         val centerY = height / 2f
 
-        val innerTickRadius = centerX - 18
-        val largeInnerTickRadius = centerX - 42
+        val innerTickRadius = centerX - paints.innerTickRadius
+        val largeInnerTickRadius = centerX - paints.largeInnerTickRadius
         for (tickIndex in 0..11) {
             val tickRot = (tickIndex.toDouble() * Math.PI * 2.0 / 12).toFloat()
             val innerX: Float
@@ -82,9 +82,9 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
         val minRot = minutes / 30f * Math.PI.toFloat()
         val hrRot = (calendar.get(Calendar.HOUR) + minutes / 60f) / 6f * Math.PI.toFloat()
 
-        val secLength = centerX - 16
-        val minLength = centerX - 26
-        val hrLength = centerX - 70
+        val secLength = centerX - paints.secLength
+        val minLength = centerX - paints.minLength
+        val hrLength = centerX - paints.hrLength
 
         val hrX = Math.sin(hrRot.toDouble()).toFloat() * hrLength
         val hrY = (-Math.cos(hrRot.toDouble())).toFloat() * hrLength
@@ -100,8 +100,8 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
             paints.accentHandColor = config.accentColor
 
             val rotate = if (config.smoothMovement) milliRotate else secRotate
-            val secStartX = Math.sin(rotate.toDouble()).toFloat() * -40
-            val secStartY = (-Math.cos(rotate.toDouble())).toFloat() * -40
+            val secStartX = Math.sin(rotate.toDouble()).toFloat() * paints.secStart
+            val secStartY = (-Math.cos(rotate.toDouble())).toFloat() * paints.secStart
             val secX = Math.sin(rotate.toDouble()).toFloat() * secLength
             val secY = (-Math.cos(rotate.toDouble())).toFloat() * secLength
 

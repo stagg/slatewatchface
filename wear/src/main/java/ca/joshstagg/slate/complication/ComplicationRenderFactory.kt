@@ -12,7 +12,9 @@ internal class ComplicationRenderFactory(context: Context) {
     private val mEmptyRender = object : ComplicationRenderer {}
 
     internal fun rendererFor(type: Int): ComplicationRenderer = when (type) {
-        ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_NO_PERMISSION -> mTextRender
+        ComplicationData.TYPE_SHORT_TEXT,
+        ComplicationData.TYPE_NO_PERMISSION,
+        ComplicationData.TYPE_NO_DATA -> mTextRender
         ComplicationData.TYPE_SMALL_IMAGE -> mSmallImageRender
         ComplicationData.TYPE_ICON -> mIconRender
         ComplicationData.TYPE_RANGED_VALUE -> mRangeRender

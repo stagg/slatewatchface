@@ -26,11 +26,8 @@ class SlateConfigActivity : Activity() {
 
         val recyclerView: WearableRecyclerView = findViewById(R.id.config_recycler_view)
         recyclerView.layoutManager = layoutManager
-        recyclerView.isCircularScrollingGestureEnabled = true
-        recyclerView.isEdgeItemsCenteringEnabled = true
-        recyclerView.setHasFixedSize(true)
+        recyclerView.setHasFixedSize(false)
         recyclerView.adapter = adapter
-
         Slate.instance.configService.connect()
     }
 

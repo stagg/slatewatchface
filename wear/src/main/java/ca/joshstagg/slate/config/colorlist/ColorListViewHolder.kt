@@ -1,4 +1,4 @@
-package ca.joshstagg.slate.config
+package ca.joshstagg.slate.config.colorlist
 
 import android.content.res.ColorStateList
 import android.graphics.Color
