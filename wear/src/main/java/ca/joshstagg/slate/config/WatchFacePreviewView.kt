@@ -54,6 +54,15 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
         setZOrderOnTop(true)
         holder.addCallback(this)
         holder.setFormat(PixelFormat.TRANSPARENT)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        handlerThread = HandlerThread("WatchFacePreviewView")
+        handlerThread.start()
+        previewHandler = PreviewHandler(handlerThread.looper, holder, watchEngine, notificationEngine, complicationEngine)
+        providerInfoRetriever = ProviderInfoRetriever(context, pool)
+        providerInfoRetriever.init()
         setupComplication(Constants.TOP_DIAL_COMPLICATION)
         setupComplication(Constants.RIGHT_DIAL_COMPLICATION)
         setupComplication(Constants.LEFT_DIAL_COMPLICATION)
@@ -73,14 +82,6 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
         complicationEngine.dataUpdate(complicationId, data)
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        handlerThread = HandlerThread("WatchFacePreviewView")
-        handlerThread.start()
-        previewHandler = PreviewHandler(handlerThread.looper, holder, watchEngine, notificationEngine, complicationEngine)
-        providerInfoRetriever = ProviderInfoRetriever(context, pool)
-        providerInfoRetriever.init()
-    }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         providerInfoRetriever.retrieveProviderInfo(object : ProviderInfoRetriever.OnProviderInfoReceivedCallback() {
