@@ -40,6 +40,8 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
     val complicationMainText: Paint = Paint()
     val complicationSubText: Paint = Paint()
     val complicationEdge: Paint = Paint()
+    val complicationFill: Paint = Paint()
+
     val complicationSecondary: Paint = Paint()
 
     var accentHandColor = Config().accentColor
@@ -53,7 +55,6 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
     private val mPrimaryHandColor = 0xfff5f5f5.toInt()
     private val mShadowColor = 0xaa000000.toInt()
     private val primaryComplicationColor = 0xF4FFFFFF.toInt()
-
     val complicationTint: Int
         get() {
             return primaryComplicationColor
@@ -112,6 +113,8 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
         complicationEdge.style = Paint.Style.STROKE
         complicationEdge.strokeWidth = 2f * scale
         complicationEdge.isAntiAlias = true
+
+        complicationFill.setARGB(100, 50, 50, 50)
 
         complicationSecondary.setARGB(255, 155, 155, 155)
         complicationSecondary.strokeCap = Paint.Cap.ROUND

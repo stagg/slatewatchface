@@ -135,7 +135,7 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
                                  val notificationEngine: NotificationEngine,
                                  val complicationEngine: ComplicationEngine) : Handler(looper) {
 
-        private val calender: Calendar = Calendar.getInstance()
+        private val calendar: Calendar = Calendar.getInstance()
 
 
         private val pathClip = Path()
@@ -143,7 +143,7 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
 
 
         init {
-            calender.set(2000, 0, 0, 10, 10, 0)
+            calendar.set(2000, 0, 0, 10, 10, 0)
         }
 
         override fun handleMessage(msg: Message) {
@@ -172,9 +172,9 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
             canvas.clipPath(pathClip)
 
             watchEngine.drawBackground(canvas, false)
-            complicationEngine.drawComplications(canvas, false, calender)
+            complicationEngine.drawComplications(canvas, false, calendar)
             watchEngine.drawTicks(canvas, false)
-            watchEngine.drawHands(canvas, false, calender, width / 2f, height / 2f)
+            watchEngine.drawHands(canvas, false, calendar, width / 2f, height / 2f)
 
             if (Slate.instance.configService.config.notificationDot) {
                 notificationEngine.unreadCountChanged(1)

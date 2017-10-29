@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "ca.joshstagg.slate"
         minSdkVersion 25
-        targetSdkVersion 26
-        versionCode 5
+        targetSdkVersion 27
+        versionCode 6
         versionName "2.0-beta1"
     }
     signingConfigs {
@@ -47,13 +47,13 @@ android {
 
 dependencies {
     // Google
-    compileOnly 'com.google.android.wearable:wearable:2.0.5'
-    implementation 'com.google.android.support:wearable:2.0.5'
+    compileOnly 'com.google.android.wearable:wearable:2.1.0'
+    implementation 'com.google.android.support:wearable:2.1.0'
     implementation 'com.google.android.gms:play-services-wearable:11.4.2'
 
     // Support
-    implementation 'com.android.support:palette-v7:26.0.0'
-    implementation 'com.android.support:wear:26.0.0'
+    implementation 'com.android.support:palette-v7:27.0.0'
+    implementation 'com.android.support:wear:27.0.0'
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.5.1'

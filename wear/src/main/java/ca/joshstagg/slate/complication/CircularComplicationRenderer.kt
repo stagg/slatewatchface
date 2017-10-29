@@ -17,7 +17,7 @@ internal abstract class CircularComplicationRenderer : ComplicationRenderer {
         canvas.save()
         canvas.clipPath(pathClip)
         // Fill
-        canvas.drawColor(paints.complicationEdge.color)
+        canvas.drawColor(paints.complicationFill.color)
         renderInBounds()
         canvas.restore()
         // Draw bounding edge

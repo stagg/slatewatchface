@@ -1,23 +1,4 @@
 <resources>
-    <string-array name="color_array_icons">
-        <item>@drawable/card_red</item>
-        <item>@drawable/card_pink</item>
-        <item>@drawable/card_purple_deep</item>
-        <item>@drawable/card_purple</item>
-        <item>@drawable/card_indigo</item>
-        <item>@drawable/card_blue</item>
-        <item>@drawable/card_teal</item>
-        <item>@drawable/card_green</item>
-        <item>@drawable/card_lime</item>
-        <item>@drawable/card_yellow</item>
-        <item>@drawable/card_orange</item>
-        <item>@drawable/card_orange_deep</item>
-        <item>@drawable/card_brown</item>
-        <item>@drawable/card_grey</item>
-        <item>@drawable/card_dark</item>
-        <item>@drawable/card_light</item>
-    </string-array>
-
     <string-array name="color_array">
         <item>#FFE53935</item>
         <item>#FFD81B60</item>
