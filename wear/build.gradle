@@ -9,8 +9,8 @@ android {
         applicationId "ca.joshstagg.slate"
         minSdkVersion 25
         targetSdkVersion 27
-        versionCode 7
-        versionName "2.0-beta2"
+        versionCode 8
+        versionName "2.0"
     }
     signingConfigs {
         debug {
@@ -48,11 +48,14 @@ android {
 dependencies {
     // Google
     compileOnly 'com.google.android.wearable:wearable:2.1.0'
-    implementation 'com.google.android.support:wearable:2.1.0'
-    implementation 'com.google.android.gms:play-services-wearable:11.4.2'
+    implementation('com.google.android.support:wearable:2.1.0') {
+        exclude group: 'com.android.support'
+    }
+    implementation('com.google.android.gms:play-services-wearable:11.4.2') {
+        exclude group: 'com.android.support'
+    }
 
     // Support
-    implementation 'com.android.support:palette-v7:27.0.0'
     implementation 'com.android.support:wear:27.0.0'
 
     // Logging
