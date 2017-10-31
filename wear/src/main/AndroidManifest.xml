@@ -1,13 +1,17 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ca.joshstagg.slate">
-    <uses-feature android:name="android.hardware.type.watch" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="ca.joshstagg.slate">
 
-    <uses-permission
-        android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
-    <uses-permission
-        android:name="android.permission.WAKE_LOCK" />
+    <uses-feature android:name="android.hardware.type.watch"/>
 
-    <application android:allowBackup="true" android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher">
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND"/>
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA"/>
+
+    <application
+        android:name="Slate"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name">
 
         <service
             android:name=".SlateWatchFaceService"
@@ -17,42 +21,47 @@
             android:permission="android.permission.BIND_WALLPAPER" >
             <meta-data
                 android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face" />
+                android:resource="@xml/watch_face"/>
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/preview_analog" />
+                android:resource="@drawable/preview_analog"/>
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/preview_analog_circular" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.companionConfigurationAction"
-                android:value="ca.joshstagg.CONFIG_SLATE" />
+                android:resource="@drawable/preview_analog_circular"/>
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="ca.joshstagg.CONFIG_SLATE" />
+                android:value="ca.joshstagg.CONFIG_SLATE"/>
+
             <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
+                <action android:name="android.service.wallpaper.WallpaperService"/>
                 <category
                     android:name=
-                        "com.google.android.wearable.watchface.category.WATCH_FACE" />
+                        "com.google.android.wearable.watchface.category.WATCH_FACE"/>
             </intent-filter>
         </service>
 
+        <activity android:name="android.support.wearable.complications.ComplicationHelperActivity"/>
+
         <activity
-            android:name=".SlateWatchFaceWearablePrefActivity"
-            android:label="@string/slate_config_name">
+            android:name=".config.SlateConfigActivity"
+            android:label="@string/slate_config_name"
+            android:theme="@style/Theme.Wearable">
             <intent-filter>
-                <action android:name="ca.joshstagg.CONFIG_SLATE" />
-                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="ca.joshstagg.CONFIG_SLATE"/>
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <service android:name=".SlateWatchFaceConfigListenerService">
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
-        </service>
+        <activity
+            android:name=".config.colorlist.SlateConfigColorListActivity"
+            android:label="@string/slate_config_name"
+            android:theme="@style/Theme.Wearable">
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true"/>
 
     </application>
 </manifest>

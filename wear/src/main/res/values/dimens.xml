@@ -18,4 +18,12 @@
     <dimen name="content_padding_start">12dp</dimen>
     <dimen name="circular_card_width">24dp</dimen>
     <dimen name="circular_card_height">24dp</dimen>
+
+    <dimen name="standard_padding">8dp</dimen>
+    <dimen name="standard_margin">8dp</dimen>
+    <dimen name="standard_text_size">16sp</dimen>
+    <dimen name="summary_text_size">14sp</dimen>
+
+    <dimen name="config_activity_padding">24dp</dimen>
+    <dimen name="config_circular_color">40dp</dimen>
 </resources>
