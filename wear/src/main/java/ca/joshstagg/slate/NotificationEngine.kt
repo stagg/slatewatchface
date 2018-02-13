@@ -19,9 +19,9 @@ class NotificationEngine(private val paints: SlatePaints) {
         return changed
     }
 
-    fun drawUnreadIndicator(canvas: Canvas, isAmbient: Boolean) {
+    fun drawUnreadIndicator(canvas: Canvas, ambient: Ambient) {
         val config = Slate.instance.configService.config
-        if (!isAmbient && config.notificationDot && unreadNotificationCount > 0) {
+        if (Ambient.NORMAL == ambient && config.notificationDot && unreadNotificationCount > 0) {
             val width = (canvas.width / 2).toFloat()
             val height = (canvas.height - paints.notificationOffset).toFloat()
             canvas.drawCircle(width, height, paints.notificationOuterRadius, paints.center)

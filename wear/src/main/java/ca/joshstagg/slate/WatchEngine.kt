@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.icu.util.Calendar
-import android.support.v4.content.ContextCompat
 
 /**
  * Slate ca.joshstagg.slate
@@ -15,12 +14,8 @@ import android.support.v4.content.ContextCompat
 class WatchEngine(context: Context, private val paints: SlatePaints) {
 
     private val ticks = arrayOfNulls<FloatArray>(12)
-    private var backgroundBitmap: Bitmap? = null
+    private var backgroundBitmap = (context.getDrawable(R.drawable.bg) as BitmapDrawable).bitmap
     private var backgroundScaledBitmap: Bitmap? = null
-
-    init {
-        backgroundBitmap = (ContextCompat.getDrawable(context, R.drawable.bg) as BitmapDrawable).bitmap
-    }
 
     fun initialize(width: Int, height: Int) {
         initializeBackground(width, height)
@@ -29,8 +24,12 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
 
     // Scale the background to fit.
     private fun initializeBackground(width: Int, height: Int) {
-        if (null == backgroundScaledBitmap || backgroundScaledBitmap?.width != width || backgroundScaledBitmap?.height != height) {
-            backgroundScaledBitmap = Bitmap.createScaledBitmap(backgroundBitmap, width, height, true)
+        if (null == backgroundScaledBitmap
+            || backgroundScaledBitmap?.width != width
+            || backgroundScaledBitmap?.height != height
+        ) {
+            backgroundScaledBitmap =
+                    Bitmap.createScaledBitmap(backgroundBitmap, width, height, true)
         }
     }
 
@@ -53,27 +52,38 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
             }
             val outerX = Math.sin(tickRot.toDouble()).toFloat() * centerX
             val outerY = (-Math.cos(tickRot.toDouble())).toFloat() * centerX
-            ticks[tickIndex] = floatArrayOf(centerX + innerX, centerY + innerY, centerX + outerX, centerY + outerY)
+            ticks[tickIndex] = floatArrayOf(
+                centerX + innerX,
+                centerY + innerY,
+                centerX + outerX,
+                centerY + outerY
+            )
         }
     }
 
-    fun drawBackground(canvas: Canvas, isAmbient: Boolean) {
-        if (isAmbient) {
+    fun drawBackground(canvas: Canvas, ambient: Ambient) {
+        if (Ambient.NORMAL != ambient) {
             canvas.drawColor(Color.BLACK)
         } else if (null != backgroundScaledBitmap) {
             canvas.drawBitmap(backgroundScaledBitmap, 0f, 0f, null)
         }
     }
 
-    fun drawTicks(canvas: Canvas, isAmbient: Boolean) {
-        if (!isAmbient) {
+    fun drawTicks(canvas: Canvas, ambient: Ambient) {
+        if (Ambient.NORMAL == ambient) {
             for (tick in ticks) {
                 canvas.drawLines(tick, paints.tick)
             }
         }
     }
 
-    fun drawHands(canvas: Canvas, isAmbient: Boolean, calendar: Calendar, centerX: Float, centerY: Float) {
+    fun drawHands(
+        canvas: Canvas,
+        ambient: Ambient,
+        calendar: Calendar,
+        centerX: Float,
+        centerY: Float
+    ) {
         val config = Slate.instance.configService.config
 
         val milliRotate = calendar.timeInMillis % 60000 / 1000f / 30f * Math.PI.toFloat()
@@ -94,9 +104,9 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
         val minY = (-Math.cos(minRot.toDouble())).toFloat() * minLength
         canvas.drawCircle(centerX, centerY, paints.centerRadius, paints.minute)
         canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, paints.minute)
-        canvas.drawCircle(centerX, centerY,  paints.centerRadius, paints.center)
+        canvas.drawCircle(centerX, centerY, paints.centerRadius, paints.center)
 
-        if (!isAmbient) {
+        if (Ambient.NORMAL == ambient) {
             paints.accentHandColor = config.accentColor
 
             val rotate = if (config.smoothMovement) milliRotate else secRotate
@@ -105,11 +115,12 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
             val secX = Math.sin(rotate.toDouble()).toFloat() * secLength
             val secY = (-Math.cos(rotate.toDouble())).toFloat() * secLength
 
-            canvas.drawLine(centerX + secStartX,
-                    centerY + secStartY,
-                    centerX + secX,
-                    centerY + secY, paints.second)
-
+            canvas.drawLine(
+                centerX + secStartX,
+                centerY + secStartY,
+                centerX + secX,
+                centerY + secY, paints.second
+            )
             canvas.drawCircle(centerX, centerY, paints.centerSecondRadius, paints.second)
         }
     }

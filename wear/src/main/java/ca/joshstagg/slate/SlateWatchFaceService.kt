@@ -22,10 +22,11 @@ import ca.joshstagg.slate.complication.ComplicationEngine
 class SlateWatchFaceService : CanvasWatchFaceService() {
 
     override fun onCreateEngine(): Engine {
-        return Engine(this.applicationContext)
+        return Engine(applicationContext)
     }
 
-    inner class Engine internal constructor(private val context: Context) : CanvasWatchFaceService.Engine() {
+    inner class Engine internal constructor(private val context: Context) :
+        CanvasWatchFaceService.Engine() {
         private val updateTimeHandler: Handler = EngineHandler(this)
         private val paints: SlatePaints = SlatePaints(context)
         private val slateTime: SlateTime = SlateTime(context)
@@ -36,9 +37,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
          */
         private var lowBitAmbient: Boolean = false
         private var burnInProtection: Boolean = false
-
-        private var width: Int = 0
-        private var height: Int = 0
+        private var ambientMode: Ambient = Ambient.NORMAL
 
         private lateinit var watchEngine: WatchEngine
         private lateinit var complicationEngine: ComplicationEngine
@@ -51,27 +50,34 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
          */
         override fun onCreate(holder: SurfaceHolder?) {
             super.onCreate(holder)
-            val component = ComponentName(context, SlateWatchFaceService::class.java)
-            setWatchFaceStyle(WatchFaceStyle.Builder.forComponentName(component)
+            setWatchFaceStyle(
+                WatchFaceStyle.Builder
+                    .forComponentName(ComponentName(context, SlateWatchFaceService::class.java))
                     .setStatusBarGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP)
                     .setAcceptsTapEvents(true)
-                    .build())
+                    .build()
+            )
             watchEngine = WatchEngine(context, paints)
             complicationEngine = ComplicationEngine(applicationContext, paints)
             notificationEngine = NotificationEngine(paints)
-            setActiveComplications(*Constants.COMPLICATION_IDS)
+            setActiveComplications(*COMPLICATION_IDS)
         }
 
-        override fun onPropertiesChanged(properties: Bundle?) {
+        override fun onPropertiesChanged(properties: Bundle) {
             super.onPropertiesChanged(properties)
-            lowBitAmbient = properties?.getBoolean(WatchFaceService.PROPERTY_LOW_BIT_AMBIENT, false) ?: false
-            burnInProtection = properties?.getBoolean(WatchFaceService.PROPERTY_BURN_IN_PROTECTION, false) ?: false
+            properties.apply {
+                lowBitAmbient = getBoolean(WatchFaceService.PROPERTY_LOW_BIT_AMBIENT, false)
+                burnInProtection = true //getBoolean(WatchFaceService.PROPERTY_BURN_IN_PROTECTION, false)
+            }
         }
 
         /*
          * Called when there is updated data for a complication id.
          */
-        override fun onComplicationDataUpdate(complicationId: Int, complicationData: ComplicationData?) {
+        override fun onComplicationDataUpdate(
+            complicationId: Int,
+            complicationData: ComplicationData?
+        ) {
             // Adds/updates active complication data in the array.
             complicationEngine.dataUpdate(complicationId, complicationData)
             invalidate()
@@ -86,6 +92,13 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
         override fun onAmbientModeChanged(inAmbientMode: Boolean) {
             /* the wearable switched between modes */
             super.onAmbientModeChanged(inAmbientMode)
+            ambientMode = when {
+                inAmbientMode && lowBitAmbient && burnInProtection -> Ambient.AMBIENT_LOW_BIT_BURN_IN
+                inAmbientMode && burnInProtection -> Ambient.AMBIENT_BURN_IN
+                inAmbientMode && lowBitAmbient -> Ambient.AMBIENT_LOW_BIT
+                inAmbientMode -> Ambient.AMBIENT
+                else -> Ambient.NORMAL
+            }
             if (lowBitAmbient) {
                 paints.setAntiAlias(!inAmbientMode)
             }
@@ -95,10 +108,6 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
 
         override fun onSurfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
             super.onSurfaceChanged(holder, format, width, height)
-
-            this.width = width
-            this.height = height
-
             watchEngine.initialize(width, height)
             complicationEngine.initialize(width, height)
         }
@@ -121,14 +130,20 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             val centerX = width / 2f
             val centerY = height / 2f
 
-            val isAmbient = isInAmbientMode
             val calendar = slateTime.timeNow
 
-            watchEngine.drawBackground(canvas, isAmbient)
-            complicationEngine.drawComplications(canvas, isAmbient, calendar)
-            watchEngine.drawTicks(canvas, isAmbient)
-            watchEngine.drawHands(canvas, isAmbient, calendar, centerX, centerY)
-            notificationEngine.drawUnreadIndicator(canvas, isAmbient)
+            watchEngine.drawBackground(canvas, ambientMode)
+            complicationEngine.drawComplications(canvas, ambientMode, calendar)
+            watchEngine.drawTicks(canvas, ambientMode)
+            watchEngine.drawHands(canvas, ambientMode, calendar, centerX, centerY)
+            notificationEngine.drawUnreadIndicator(canvas, ambientMode)
+
+            if (Ambient.AMBIENT_BURN_IN == ambientMode ||
+                Ambient.AMBIENT_LOW_BIT_BURN_IN == ambientMode
+            ) {
+                val offset = (Math.random() * paints.burnInShift).toFloat()
+                canvas.translate(offset, offset)
+            }
         }
 
         /**
@@ -158,14 +173,14 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
          * or stops it if it shouldn't be running but currently is.
          */
         private fun restartTimer() {
-            updateTimeHandler.removeMessages(Constants.MSG_UPDATE_TIME)
+            updateTimeHandler.removeMessages(MSG_UPDATE_TIME)
             if (shouldTimerBeRunning()) {
-                updateTimeHandler.sendEmptyMessage(Constants.MSG_UPDATE_TIME)
+                updateTimeHandler.sendEmptyMessage(MSG_UPDATE_TIME)
             }
         }
 
         override fun onDestroy() {
-            updateTimeHandler.removeMessages(Constants.MSG_UPDATE_TIME)
+            updateTimeHandler.removeMessages(MSG_UPDATE_TIME)
             super.onDestroy()
         }
 
@@ -183,14 +198,14 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                 val config = Slate.instance.configService.config
                 val updateRate = config.updateRate
                 val delayMs = updateRate - System.currentTimeMillis() % updateRate
-                updateTimeHandler.sendEmptyMessageDelayed(Constants.MSG_UPDATE_TIME, delayMs)
+                updateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs)
             }
         }
     }
 
     private class EngineHandler internal constructor(private val engine: Engine) : Handler() {
         override fun handleMessage(message: Message) {
-            if (Constants.MSG_UPDATE_TIME == message.what) {
+            if (MSG_UPDATE_TIME == message.what) {
                 engine.updateTime()
             }
         }

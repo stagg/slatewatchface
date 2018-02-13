@@ -1,15 +1,21 @@
 package ca.joshstagg.slate.config
 
 import android.graphics.Color
-import ca.joshstagg.slate.Constants
+import ca.joshstagg.slate.ACCENT_COLOR_STRING_DEFAULT
+import ca.joshstagg.slate.AMBIENT_COLOR_STRING_DEFAULT
+import ca.joshstagg.slate.INTERACTIVE_SMOOTH_UPDATE_RATE_MS
+import ca.joshstagg.slate.INTERACTIVE_UPDATE_RATE_MS
 
 
-data internal class Config(val accentColor: Int = Color.parseColor(Constants.ACCENT_COLOR_STRING_DEFAULT),
-                           val smoothMovement: Boolean = false,
-                           val notificationDot: Boolean = true) {
+internal data class Config(
+    val accentColor: Int = Color.parseColor(ACCENT_COLOR_STRING_DEFAULT),
+    val ambientColor: Int = Color.parseColor(AMBIENT_COLOR_STRING_DEFAULT),
+    val smoothMovement: Boolean = false,
+    val notificationDot: Boolean = true
+) {
     val updateRate: Long = if (smoothMovement) {
-        Constants.INTERACTIVE_SMOOTH_UPDATE_RATE_MS
+        INTERACTIVE_SMOOTH_UPDATE_RATE_MS
     } else {
-        Constants.INTERACTIVE_UPDATE_RATE_MS
+        INTERACTIVE_UPDATE_RATE_MS
     }
 }

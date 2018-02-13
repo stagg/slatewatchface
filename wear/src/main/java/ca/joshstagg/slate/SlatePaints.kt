@@ -26,6 +26,7 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
     val secStart = -20 * scale
     val notificationOffset = 18 * scale
 
+    val burnInShift = 10f * scale
 
     private val complicationTextSize = 14f * textScale
     private val complicationMainTextSize = 12f * textScale

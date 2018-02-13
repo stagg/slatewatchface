@@ -10,9 +10,7 @@ import android.support.wearable.complications.ComplicationData
 import android.support.wearable.complications.ComplicationHelperActivity
 import android.util.Log
 import android.util.SparseArray
-import ca.joshstagg.slate.Constants
-import ca.joshstagg.slate.SlatePaints
-import ca.joshstagg.slate.SlateWatchFaceService
+import ca.joshstagg.slate.*
 
 /**
  * Slate ca.joshstagg.slate
@@ -26,27 +24,28 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
         ComplicationRenderFactory(context)
     }
 
-    private var activeComplicationDataSparseArray: SparseArray<ComplicationData?> = SparseArray(Constants.COMPLICATION_IDS.size)
+    private var activeComplicationDataSparseArray: SparseArray<ComplicationData?> =
+        SparseArray(COMPLICATION_IDS.size)
 
     fun initialize(width: Int, height: Int) {
         val radius: Int = width / 8
-        for (id in Constants.COMPLICATION_IDS) {
+        for (id in COMPLICATION_IDS) {
             val cx: Number
             val cy: Number
             when (id) {
-                Constants.TOP_DIAL_COMPLICATION -> {
+                TOP_DIAL_COMPLICATION -> {
                     cx = width / 2
                     cy = height / 4
                 }
-                Constants.BOTTOM_DIAL_COMPLICATION -> {
+                BOTTOM_DIAL_COMPLICATION -> {
                     cx = width / 2
                     cy = height * .75
                 }
-                Constants.LEFT_DIAL_COMPLICATION -> {
+                LEFT_DIAL_COMPLICATION -> {
                     cx = width / 4
                     cy = height / 2
                 }
-                else -> { //Constants.RIGHT_DIAL_COMPLICATION
+                else -> { //RIGHT_DIAL_COMPLICATION
                     cx = width * .75
                     cy = height / 2
                 }
@@ -55,7 +54,7 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
             val top = cy.toInt() - radius
             val right = cx.toInt() + radius
             val bottom = cy.toInt() + radius
-            complications.put(id, Rect(left, top, right, bottom))
+            complications[id] = Rect(left, top, right, bottom)
         }
     }
 
@@ -64,23 +63,23 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
         activeComplicationDataSparseArray.put(complicationId, complicationData)
     }
 
-    fun drawComplications(canvas: Canvas, isAmbient: Boolean, calendar: Calendar) {
+    fun drawComplications(canvas: Canvas, ambient: Ambient, calendar: Calendar) {
         val currentTimeMillis = calendar.timeInMillis
-        for (id in Constants.COMPLICATION_IDS) {
+        for (id in COMPLICATION_IDS) {
             activeComplicationDataSparseArray.get(id)
-                    ?.takeIf { complicationData -> complicationData.isActive(currentTimeMillis) }
-                    ?.let { complicationData ->
-                        canvas.save()
-                        val rect = complications.getValue(id)
-                        val render = Render(canvas, rect, currentTimeMillis, paints, complicationData)
-                        val renderer = complicationRenderFactory.rendererFor(complicationData.type)
-                        if (isAmbient) {
-                            renderer.ambientRender(render)
-                        } else {
-                            renderer.render(render)
-                        }
-                        canvas.restore()
+                ?.takeIf { complicationData -> complicationData.isActive(currentTimeMillis) }
+                ?.let { complicationData ->
+                    canvas.save()
+                    val rect = complications.getValue(id)
+                    val render = Render(canvas, rect, currentTimeMillis, paints, complicationData)
+                    val renderer = complicationRenderFactory.rendererFor(complicationData.type)
+                    if (Ambient.NORMAL == ambient) {
+                        renderer.render(render)
+                    } else {
+                        renderer.ambientRender(ambient, render)
                     }
+                    canvas.restore()
+                }
         }
     }
 
@@ -94,17 +93,17 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
 
     private fun getTappedComplicationId(x: Int, y: Int): Int {
         val currentTimeMillis = System.currentTimeMillis()
-        for (id in Constants.COMPLICATION_IDS) {
+        for (id in COMPLICATION_IDS) {
             activeComplicationDataSparseArray.get(id)
-                    ?.takeUnless { it.type == ComplicationData.TYPE_NOT_CONFIGURED }
-                    ?.takeUnless { it.type == ComplicationData.TYPE_EMPTY }
-                    ?.takeIf { it.isActive(currentTimeMillis) }
-                    ?.let {
-                        val rect = complications.getValue(id)
-                        if (rect.width() > 0 && rect.contains(x, y)) {
-                            return id
-                        }
+                ?.takeUnless { it.type == ComplicationData.TYPE_NOT_CONFIGURED }
+                ?.takeUnless { it.type == ComplicationData.TYPE_EMPTY }
+                ?.takeIf { it.isActive(currentTimeMillis) }
+                ?.let {
+                    val rect = complications.getValue(id)
+                    if (rect.width() > 0 && rect.contains(x, y)) {
+                        return id
                     }
+                }
         }
         return -1
     }
@@ -124,7 +123,11 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
             } else if (complicationData.type == ComplicationData.TYPE_NO_PERMISSION) {
                 // Watch face does not have permission to receive complication data, so launch permission request.
                 val componentName = ComponentName(context, SlateWatchFaceService::class.java)
-                val permissionRequestIntent = ComplicationHelperActivity.createPermissionRequestHelperIntent(context, componentName)
+                val permissionRequestIntent =
+                    ComplicationHelperActivity.createPermissionRequestHelperIntent(
+                        context,
+                        componentName
+                    )
                 context.startActivity(permissionRequestIntent)
             }
         }

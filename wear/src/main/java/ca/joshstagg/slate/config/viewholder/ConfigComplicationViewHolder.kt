@@ -2,7 +2,8 @@ package ca.joshstagg.slate.config.viewholder
 
 import android.content.SharedPreferences
 import android.view.View
-import ca.joshstagg.slate.Constants
+import ca.joshstagg.slate.KEY_NOTIFICATION_DOT
+import ca.joshstagg.slate.KEY_SECONDS_COLOR
 import ca.joshstagg.slate.R
 import ca.joshstagg.slate.config.WatchFacePreviewView
 import ca.joshstagg.slate.config.items.ConfigComplication
@@ -11,8 +12,9 @@ import ca.joshstagg.slate.config.items.ConfigComplication
  * Slate ca.joshstagg.slate.config
  * Copyright 2017  Josh Stagg
  */
-class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: SharedPreferences)
-    : ConfigViewHolder<ConfigComplication>(itemView), SharedPreferences.OnSharedPreferenceChangeListener {
+class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: SharedPreferences) :
+    ConfigViewHolder<ConfigComplication>(itemView),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val preview: WatchFacePreviewView = itemView.findViewById(R.id.config_watch_preview)
 
@@ -26,9 +28,8 @@ class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: Shar
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key in listOf(Constants.KEY_NOTIFICATION_DOT, Constants.KEY_SECONDS_COLOR)) {
+        if (key in listOf(KEY_NOTIFICATION_DOT, KEY_SECONDS_COLOR)) {
             preview.postInvalidate()
         }
     }
-
 }

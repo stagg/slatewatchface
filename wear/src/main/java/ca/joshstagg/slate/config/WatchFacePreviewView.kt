@@ -31,12 +31,13 @@ const val MESSAGE_DRAW = 0
 const val MESSAGE_COMPLICATION_UPDATE = 1
 const val MESSAGE_COMPLICATION_TAP = 2
 
-class WatchFacePreviewView @JvmOverloads constructor(context: Context,
-                                                     attrs: AttributeSet? = null,
-                                                     defStyleAttr: Int = 0)
-    : SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback {
+class WatchFacePreviewView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback {
 
-    private val supportedTypes = Constants.COMPLICATION_SUPPORTED_TYPES
+    private val supportedTypes = COMPLICATION_SUPPORTED_TYPES
     private val watchFace = ComponentName(context, SlateWatchFaceService::class.java)
 
     private val pool = Executors.newCachedThreadPool()
@@ -60,40 +61,55 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
         super.onAttachedToWindow()
         handlerThread = HandlerThread("WatchFacePreviewView")
         handlerThread.start()
-        previewHandler = PreviewHandler(handlerThread.looper, holder, watchEngine, notificationEngine, complicationEngine)
+        previewHandler = PreviewHandler(
+            handlerThread.looper,
+            holder,
+            watchEngine,
+            notificationEngine,
+            complicationEngine
+        )
         providerInfoRetriever = ProviderInfoRetriever(context, pool)
         providerInfoRetriever.init()
-        setupComplication(Constants.TOP_DIAL_COMPLICATION)
-        setupComplication(Constants.RIGHT_DIAL_COMPLICATION)
-        setupComplication(Constants.LEFT_DIAL_COMPLICATION)
-        setupComplication(Constants.BOTTOM_DIAL_COMPLICATION)
+        setupComplication(TOP_DIAL_COMPLICATION)
+        setupComplication(RIGHT_DIAL_COMPLICATION)
+        setupComplication(LEFT_DIAL_COMPLICATION)
+        setupComplication(BOTTOM_DIAL_COMPLICATION)
     }
 
     private fun setupComplication(complicationId: Int) {
         val intent = ComplicationHelperActivity
-                .createProviderChooserHelperIntent(context, watchFace, complicationId, *supportedTypes)
+            .createProviderChooserHelperIntent(context, watchFace, complicationId, *supportedTypes)
 
         val data = ComplicationData
-                .Builder(ComplicationData.TYPE_ICON)
-                .setIcon(Icon.createWithResource(context, R.drawable.ic_add_24dp))
-                .setTapAction(PendingIntent.getActivity(context, complicationId, intent, 0))
-                .build()
+            .Builder(ComplicationData.TYPE_ICON)
+            .setIcon(Icon.createWithResource(context, R.drawable.ic_add_24dp))
+            .setTapAction(PendingIntent.getActivity(context, complicationId, intent, 0))
+            .build()
 
         complicationEngine.dataUpdate(complicationId, data)
     }
 
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        providerInfoRetriever.retrieveProviderInfo(object : ProviderInfoRetriever.OnProviderInfoReceivedCallback() {
-            override fun onProviderInfoReceived(complicationId: Int, providerInfo: ComplicationProviderInfo?) {
+        providerInfoRetriever.retrieveProviderInfo(object :
+            ProviderInfoRetriever.OnProviderInfoReceivedCallback() {
+            override fun onProviderInfoReceived(
+                complicationId: Int,
+                providerInfo: ComplicationProviderInfo?
+            ) {
                 providerInfo?.providerIcon?.let {
                     val intent = ComplicationHelperActivity
-                            .createProviderChooserHelperIntent(context, watchFace, complicationId, *supportedTypes)
+                        .createProviderChooserHelperIntent(
+                            context,
+                            watchFace,
+                            complicationId,
+                            *supportedTypes
+                        )
                     val data = ComplicationData
-                            .Builder(ComplicationData.TYPE_ICON)
-                            .setIcon(it)
-                            .setTapAction(PendingIntent.getActivity(context, complicationId, intent, 0))
-                            .build()
+                        .Builder(ComplicationData.TYPE_ICON)
+                        .setIcon(it)
+                        .setTapAction(PendingIntent.getActivity(context, complicationId, intent, 0))
+                        .build()
                     val msg = Message()
                     msg.what = MESSAGE_COMPLICATION_UPDATE
                     msg.arg1 = complicationId
@@ -102,7 +118,7 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
                     previewHandler.sendEmptyMessage(MESSAGE_DRAW)
                 }
             }
-        }, watchFace, *Constants.COMPLICATION_IDS)
+        }, watchFace, *COMPLICATION_IDS)
 
         setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
@@ -130,11 +146,13 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
         handlerThread.quit()
     }
 
-    private class PreviewHandler(looper: Looper,
-                                 val surfaceHolder: SurfaceHolder,
-                                 val watchEngine: WatchEngine,
-                                 val notificationEngine: NotificationEngine,
-                                 val complicationEngine: ComplicationEngine) : Handler(looper) {
+    private class PreviewHandler(
+        looper: Looper,
+        val surfaceHolder: SurfaceHolder,
+        val watchEngine: WatchEngine,
+        val notificationEngine: NotificationEngine,
+        val complicationEngine: ComplicationEngine
+    ) : Handler(looper) {
 
         private val calendar: Calendar = Calendar.getInstance()
 
@@ -150,7 +168,10 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 MESSAGE_DRAW -> surfaceHolder.draw()
-                MESSAGE_COMPLICATION_UPDATE -> complicationEngine.dataUpdate(msg.arg1, msg.obj as? ComplicationData)
+                MESSAGE_COMPLICATION_UPDATE -> complicationEngine.dataUpdate(
+                    msg.arg1,
+                    msg.obj as? ComplicationData
+                )
                 MESSAGE_COMPLICATION_TAP -> complicationEngine.complicationTap(msg.arg1, msg.arg2)
             }
         }
@@ -172,14 +193,14 @@ class WatchFacePreviewView @JvmOverloads constructor(context: Context,
             canvas.save()
             canvas.clipPath(pathClip)
 
-            watchEngine.drawBackground(canvas, false)
-            complicationEngine.drawComplications(canvas, false, calendar)
-            watchEngine.drawTicks(canvas, false)
-            watchEngine.drawHands(canvas, false, calendar, width / 2f, height / 2f)
+            watchEngine.drawBackground(canvas, Ambient.NORMAL)
+            complicationEngine.drawComplications(canvas, Ambient.NORMAL, calendar)
+            watchEngine.drawTicks(canvas, Ambient.NORMAL)
+            watchEngine.drawHands(canvas, Ambient.NORMAL, calendar, width / 2f, height / 2f)
 
             if (Slate.instance.configService.config.notificationDot) {
                 notificationEngine.unreadCountChanged(1)
-                notificationEngine.drawUnreadIndicator(canvas, false)
+                notificationEngine.drawUnreadIndicator(canvas, Ambient.NORMAL)
             }
 
             canvas.restore()
