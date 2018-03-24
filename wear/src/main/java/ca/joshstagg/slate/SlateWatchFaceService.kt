@@ -55,6 +55,8 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                     .forComponentName(ComponentName(context, SlateWatchFaceService::class.java))
                     .setStatusBarGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP)
                     .setAcceptsTapEvents(true)
+                    .setAccentColor(paints.accentHandColor)
+                    .setHideNotificationIndicator(true)
                     .build()
             )
             watchEngine = WatchEngine(context, paints)
