@@ -155,11 +155,8 @@ class WatchFacePreviewView @JvmOverloads constructor(
     ) : Handler(looper) {
 
         private val calendar: Calendar = Calendar.getInstance()
-
-
         private val pathClip = Path()
         private val rectF = RectF()
-
 
         init {
             calendar.set(2000, 0, 0, 10, 10, 0)

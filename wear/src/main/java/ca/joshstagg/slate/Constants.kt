@@ -43,6 +43,7 @@ const val KEY_SECONDS_COLOR = "SECONDS_COLOR_1_2_1"
 const val KEY_SMOOTH_MODE = "SMOOTH_MODE"
 const val KEY_NOTIFICATION_DOT = "NOTIFICATION_DOT"
 const val KEY_AMBIENT_COLOR = "AMBIENT_COLOR"
+const val KEY_BACKGROUND = "BACKGROUND"
 
 /**
  * The path for the [DataItem] containing [SlateWatchFaceService] configuration.

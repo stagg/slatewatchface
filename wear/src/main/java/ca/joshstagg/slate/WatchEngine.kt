@@ -62,7 +62,8 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
     }
 
     fun drawBackground(canvas: Canvas, ambient: Ambient) {
-        if (Ambient.NORMAL != ambient) {
+        val config = Slate.instance.configService.config
+        if (!config.background || Ambient.NORMAL != ambient) {
             canvas.drawColor(Color.BLACK)
         } else if (null != backgroundScaledBitmap) {
             canvas.drawBitmap(backgroundScaledBitmap, 0f, 0f, null)

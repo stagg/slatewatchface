@@ -18,5 +18,9 @@
     <string name="slate_notification_dot_summary_on">Shown</string>
     <string name="slate_notification_dot_summary_off">Hidden</string>
 
+    <string name="slate_background">Background</string>
+    <string name="slate_background_summary_on">Shown</string>
+    <string name="slate_background_summary_off">Hidden</string>
+
     <string name="slate_ambient_color">Ambient color</string>
 </resources>

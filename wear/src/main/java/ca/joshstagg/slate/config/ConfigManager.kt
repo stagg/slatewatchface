@@ -66,13 +66,6 @@ class ConfigManager internal constructor(private val context: Context) :
                 offText = context.getString(R.string.slate_smooth_mode_summary_off),
                 offIcon = R.drawable.ic_schedule_white_40dp
             ),
-            ConfigSwitch(
-                key = KEY_NOTIFICATION_DOT,
-                title = context.getString(R.string.slate_notification_dot),
-                default = config.notificationDot,
-                onText = context.getString(R.string.slate_notification_dot_summary_on),
-                offText = context.getString(R.string.slate_notification_dot_summary_off)
-            ),
             ConfigColor(
                 key = KEY_AMBIENT_COLOR,
                 title = context.getString(R.string.slate_ambient_color),
@@ -80,6 +73,20 @@ class ConfigManager internal constructor(private val context: Context) :
                 defaultText = greyNames[0],
                 colorNames = greyNames,
                 colorValues = greyValues
+            ),
+            ConfigSwitch(
+                key = KEY_NOTIFICATION_DOT,
+                title = context.getString(R.string.slate_notification_dot),
+                default = config.notificationDot,
+                onText = context.getString(R.string.slate_notification_dot_summary_on),
+                offText = context.getString(R.string.slate_notification_dot_summary_off)
+            ),
+            ConfigSwitch(
+                key = KEY_BACKGROUND,
+                title = context.getString(R.string.slate_background),
+                default = config.background,
+                onText = context.getString(R.string.slate_background_summary_on),
+                offText = context.getString(R.string.slate_background_summary_off)
             )
         )
     }
@@ -135,6 +142,11 @@ class ConfigManager internal constructor(private val context: Context) :
                     sharedPreferences.getBoolean(key, configDefault.notificationDot)
                 configKeysToOverwrite.putBoolean(KEY_NOTIFICATION_DOT, notificationDot)
                 Logger.d(TAG, "Update config notification dot: $notificationDot")
+            }
+            KEY_BACKGROUND -> {
+                val background = sharedPreferences.getBoolean(key, configDefault.background)
+                configKeysToOverwrite.putBoolean(KEY_BACKGROUND, background)
+                Logger.d(TAG, "Update config background dot: $background")
             }
             KEY_AMBIENT_COLOR -> {
                 val grey = sharedPreferences.getString(key, AMBIENT_COLOR_STRING_DEFAULT)
@@ -206,17 +218,23 @@ class ConfigManager internal constructor(private val context: Context) :
         when (key) {
             KEY_SECONDS_COLOR -> {
                 dataMap.getString(key)?.let {
-                    config = config.copy(accentColor = Color.parseColor(it))
+                    config.copy(accentColor = Color.parseColor(it))
                 }
             }
             KEY_AMBIENT_COLOR -> {
                 dataMap.getString(key)?.let {
-                    config = config.copy(ambientColor = Color.parseColor(it))
+                    config.copy(ambientColor = Color.parseColor(it))
                 }
             }
-            KEY_SMOOTH_MODE -> config = config.copy(smoothMovement = dataMap.getBoolean(key))
-            KEY_NOTIFICATION_DOT -> config = config.copy(notificationDot = dataMap.getBoolean(key))
-            else -> Logger.d(TAG, "Ignoring unknown dataMap key: $key")
+            KEY_SMOOTH_MODE -> config.copy(smoothMovement = dataMap.getBoolean(key))
+            KEY_NOTIFICATION_DOT ->  config.copy(notificationDot = dataMap.getBoolean(key))
+            KEY_BACKGROUND -> config.copy(background = dataMap.getBoolean(key))
+            else -> {
+                Logger.d(TAG, "Ignoring unknown dataMap key: $key")
+                null
+            }
+        }?.let {
+            config = it
         }
     }
 
