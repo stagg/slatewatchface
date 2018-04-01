@@ -14,8 +14,8 @@ import android.icu.util.Calendar
 class WatchEngine(context: Context, private val paints: SlatePaints) {
 
     private val ticks = arrayOfNulls<FloatArray>(12)
-    private var backgroundBitmap = (context.getDrawable(R.drawable.bg) as BitmapDrawable).bitmap
-    private var backgroundScaledBitmap: Bitmap? = null
+    private var background = (context.getDrawable(R.drawable.bg) as BitmapDrawable).bitmap
+    private var backgroundScaled: Bitmap? = null
 
     fun initialize(width: Int, height: Int) {
         initializeBackground(width, height)
@@ -24,12 +24,11 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
 
     // Scale the background to fit.
     private fun initializeBackground(width: Int, height: Int) {
-        if (null == backgroundScaledBitmap
-            || backgroundScaledBitmap?.width != width
-            || backgroundScaledBitmap?.height != height
+        if (null == backgroundScaled
+            || backgroundScaled?.width != width
+            || backgroundScaled?.height != height
         ) {
-            backgroundScaledBitmap =
-                    Bitmap.createScaledBitmap(backgroundBitmap, width, height, true)
+            backgroundScaled = Bitmap.createScaledBitmap(background, width, height, true)
         }
     }
 
@@ -65,8 +64,8 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
         val config = Slate.instance.configService.config
         if (!config.background || Ambient.NORMAL != ambient) {
             canvas.drawColor(Color.BLACK)
-        } else if (null != backgroundScaledBitmap) {
-            canvas.drawBitmap(backgroundScaledBitmap, 0f, 0f, null)
+        } else if (null != backgroundScaled) {
+            canvas.drawBitmap(backgroundScaled, 0f, 0f, null)
         }
     }
 

@@ -197,7 +197,7 @@ class WatchFacePreviewView @JvmOverloads constructor(
 
             if (Slate.instance.configService.config.notificationDot) {
                 notificationEngine.unreadCountChanged(1)
-                notificationEngine.drawUnreadIndicator(canvas, Ambient.NORMAL)
+                notificationEngine.drawUnreadIndicator(canvas)
             }
 
             canvas.restore()

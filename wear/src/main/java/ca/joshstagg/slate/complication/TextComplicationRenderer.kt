@@ -9,6 +9,6 @@ internal class TextComplicationRenderer(private val context: Context) : Circular
     }
 
     override fun Render.ambientRenderInBounds() {
-        renderText(context, complicationData.burnInProtectionIcon)
+        renderText(context, complicationData.ambientIcon)
     }
 }

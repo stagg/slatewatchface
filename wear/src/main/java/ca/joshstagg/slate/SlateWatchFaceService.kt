@@ -3,6 +3,7 @@ package ca.joshstagg.slate
 import android.content.ComponentName
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
@@ -58,8 +59,8 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                     .setStatusBarGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP)
                     .setAcceptsTapEvents(true)
                     .setAccentColor(paints.accentHandColor)
-                    .setHideNotificationIndicator(false)
-                    .setShowUnreadCountIndicator(true)
+                    .setHideNotificationIndicator(true)
+                    .setShowUnreadCountIndicator(false)
                     .build()
             )
             watchEngine = WatchEngine(context, paints)
@@ -72,7 +73,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             super.onPropertiesChanged(properties)
             properties.apply {
                 lowBitAmbient = getBoolean(WatchFaceService.PROPERTY_LOW_BIT_AMBIENT, false)
-                burnInProtection = true //getBoolean(WatchFaceService.PROPERTY_BURN_IN_PROTECTION, false)
+                burnInProtection = getBoolean(WatchFaceService.PROPERTY_BURN_IN_PROTECTION, false)
             }
         }
 
@@ -110,10 +111,12 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                 paints.setAntiAlias(!inAmbientMode)
             }
 
-            paints.handColor = if (inAmbientMode) {
-                config.ambientColor
+            if (inAmbientMode) {
+                paints.handColor = config.ambientColor
+                paints.second.color = Color.BLACK
             } else {
-                paints.primaryHandColor
+                paints.handColor = paints.primaryHandColor
+                paints.second.color = config.accentColor
             }
 
             invalidate()
@@ -149,10 +152,10 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             if (Ambient.AMBIENT_BURN_IN == ambientMode ||
                 Ambient.AMBIENT_LOW_BIT_BURN_IN == ambientMode
             ) {
-                val x = random.nextFloat() * paints.burnInShift
-                val y = random.nextFloat() * paints.burnInShift
-                val offsetX = x * if (random.nextBoolean()) 1 else - 1
-                val offsetY = y * if (random.nextBoolean()) 1 else - 1
+                val shift = paints.burnInShift
+                val shift2 = paints.burnInShift / 2
+                val offsetX = (random.nextFloat() * shift) - shift2
+                val offsetY = (random.nextFloat() * shift) - shift2
                 Logger.d("SlateWatchFaceService", "Translate: $offsetX, $offsetY")
                 canvas.translate(offsetX, offsetY)
             }
@@ -161,7 +164,7 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
             complicationEngine.drawComplications(canvas, ambientMode, calendar)
             watchEngine.drawTicks(canvas, ambientMode)
             watchEngine.drawHands(canvas, ambientMode, calendar, centerX, centerY)
-            notificationEngine.drawUnreadIndicator(canvas, ambientMode)
+            notificationEngine.drawUnreadIndicator(canvas)
         }
 
         /**

@@ -18,13 +18,15 @@ import ca.joshstagg.slate.*
  */
 class ComplicationEngine(val context: Context, private val paints: SlatePaints) {
 
+    private val emptyCanvas = Canvas()
     private val complications = mutableMapOf<Int, Rect>()
+    private val renders = mutableMapOf<Int, Render>()
 
     private val complicationRenderFactory by lazy {
         ComplicationRenderFactory(context)
     }
 
-    private var activeComplicationDataSparseArray: SparseArray<ComplicationData?> =
+    private var activeComplicationDataSparseArray: SparseArray<ComplicationRenderData?> =
         SparseArray(COMPLICATION_IDS.size)
 
     fun initialize(width: Int, height: Int) {
@@ -60,7 +62,9 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
 
     // Draw
     fun dataUpdate(complicationId: Int, complicationData: ComplicationData?) {
-        activeComplicationDataSparseArray.put(complicationId, complicationData)
+        activeComplicationDataSparseArray.put(
+            complicationId,
+            complicationData?.let { ComplicationRenderData(context, it) })
     }
 
     fun drawComplications(canvas: Canvas, ambient: Ambient, calendar: Calendar) {
@@ -68,17 +72,28 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
         for (id in COMPLICATION_IDS) {
             activeComplicationDataSparseArray.get(id)
                 ?.takeIf { complicationData -> complicationData.isActive(currentTimeMillis) }
-                ?.let { complicationData ->
-                    canvas.save()
+                ?.also { complicationData ->
                     val rect = complications.getValue(id)
-                    val render = Render(canvas, rect, currentTimeMillis, paints, complicationData)
-                    val renderer = complicationRenderFactory.rendererFor(complicationData.type)
-                    if (Ambient.NORMAL == ambient) {
-                        renderer.render(render)
-                    } else {
-                        renderer.ambientRender(ambient, render)
-                    }
-                    canvas.restore()
+                    val render = renders[id]?.also {
+                        it.canvas = canvas
+                        it.rect = rect
+                        it.currentTimeMills = currentTimeMillis
+                        it.complicationData = complicationData
+                    } ?: Render(canvas, rect, currentTimeMillis, paints, complicationData)
+
+                    complicationRenderFactory
+                        .rendererFor(complicationData.type)
+                        .apply {
+                            canvas.save()
+                            if (Ambient.NORMAL == ambient) {
+                                render(render)
+                            } else {
+                                ambientRender(ambient, render)
+                            }
+                            canvas.restore()
+                        }
+                    render.canvas = emptyCanvas
+                    renders[id] = render
                 }
         }
     }
@@ -114,11 +129,12 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
     private fun onComplicationTap(complicationId: Int) {
         val complicationData = activeComplicationDataSparseArray.get(complicationId)
         if (complicationData != null) {
-            if (complicationData.tapAction != null) {
+            val tapAction = complicationData.tapAction
+            if (tapAction != null) {
                 try {
-                    complicationData.tapAction.send()
+                    tapAction.send()
                 } catch (e: PendingIntent.CanceledException) {
-                    Log.e("ComplicationRenderer", "On complication tap action error " + e)
+                    Log.e("ComplicationRenderer", "On complication tap action error $e")
                 }
             } else if (complicationData.type == ComplicationData.TYPE_NO_PERMISSION) {
                 // Watch face does not have permission to receive complication data, so launch permission request.

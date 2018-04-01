@@ -4,7 +4,8 @@ import android.content.Context
 import android.graphics.Path
 import android.graphics.RectF
 
-internal class RangeComplicationRenderer(private val context: Context) : CircularComplicationRenderer() {
+internal class RangeComplicationRenderer(private val context: Context) :
+    CircularComplicationRenderer() {
 
     private val pathRange = Path()
     private val rectF = RectF()
@@ -12,11 +13,9 @@ internal class RangeComplicationRenderer(private val context: Context) : Circula
     override fun Render.renderInBounds() {
         renderText(context, complicationData.icon)
 
-        val value: Float = complicationData.value
-        val min: Float = complicationData.minValue
-        val max: Float = complicationData.maxValue
-        val percent = Math.abs((value - min) / (max - min))
-
+        val percent = complicationData.range.let { (value, min, max) ->
+            Math.abs((value - min) / (max - min))
+        }
         rectF.set(rect)
         pathRange.reset()
         pathRange.moveTo(rectF.left, rectF.top)
@@ -27,6 +26,6 @@ internal class RangeComplicationRenderer(private val context: Context) : Circula
     }
 
     override fun Render.ambientRenderInBounds() {
-        renderText(context, complicationData.burnInProtectionIcon)
+        renderText(context, complicationData.ambientIcon)
     }
 }

@@ -1,9 +1,8 @@
 package ca.joshstagg.slate.complication
 
-import android.content.Context
-import android.graphics.drawable.Icon
+import android.graphics.drawable.Drawable
 
-internal class IconComplicationRenderer(private val context: Context) : CircularComplicationRenderer() {
+internal class IconComplicationRenderer : CircularComplicationRenderer() {
 
     override fun Render.renderInBounds() {
         complicationData.icon?.let {
@@ -12,18 +11,18 @@ internal class IconComplicationRenderer(private val context: Context) : Circular
     }
 
     override fun Render.ambientRenderInBounds() {
-        complicationData.burnInProtectionIcon?.let {
+        complicationData.ambientIcon?.let {
             renderIcon(it)
         }
     }
 
-    private fun Render.renderIcon(icon: Icon) {
-        icon.loadDrawable(context)?.let {
-            val w = rect.width() / 3
-            val h = rect.height() / 3
-            it.setTint(paints.complicationTint)
-            it.setBounds(rect.left + w, rect.top + h, rect.right - w, rect.bottom - h)
-            it.draw(canvas)
+    private fun Render.renderIcon(drawable: Drawable) {
+        val w = rect.width() / 3
+        val h = rect.height() / 3
+        drawable.apply {
+            setTint(paints.complicationTint)
+            setBounds(rect.left + w, rect.top + h, rect.right - w, rect.bottom - h)
+            draw(canvas)
         }
     }
 }

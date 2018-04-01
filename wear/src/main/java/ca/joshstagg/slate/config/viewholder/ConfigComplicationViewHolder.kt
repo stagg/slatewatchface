@@ -7,6 +7,7 @@ import ca.joshstagg.slate.KEY_SECONDS_COLOR
 import ca.joshstagg.slate.R
 import ca.joshstagg.slate.config.WatchFacePreviewView
 import ca.joshstagg.slate.config.items.ConfigComplication
+import java.util.concurrent.TimeUnit
 
 /**
  * Slate ca.joshstagg.slate.config
@@ -20,7 +21,7 @@ class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: Shar
 
     override fun bind(item: ConfigComplication) {
         sharedPrefs.registerOnSharedPreferenceChangeListener(this)
-        preview.invalidate()
+        previewInvalidate()
     }
 
     override fun recycle() {
@@ -29,7 +30,12 @@ class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: Shar
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key in listOf(KEY_NOTIFICATION_DOT, KEY_SECONDS_COLOR)) {
-            preview.postInvalidate()
+            previewInvalidate()
         }
+    }
+
+    private fun previewInvalidate() {
+        preview.postInvalidate()
+        preview.postDelayed({ preview.postInvalidate() }, TimeUnit.SECONDS.toMillis(1))
     }
 }
