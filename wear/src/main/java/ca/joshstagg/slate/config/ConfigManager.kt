@@ -115,7 +115,7 @@ class ConfigManager internal constructor(private val context: Context) :
 
                 val dataMapItem = DataMapItem.fromDataItem(dataItem)
                 val config = dataMapItem.dataMap
-                Logger.d(TAG, "Config DataItem updated:" + config)
+                Logger.d(TAG, "Config DataItem updated:$config")
                 updateConfig(config)
             }
         } finally {

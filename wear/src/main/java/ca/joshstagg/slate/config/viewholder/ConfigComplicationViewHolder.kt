@@ -1,13 +1,13 @@
 package ca.joshstagg.slate.config.viewholder
 
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import ca.joshstagg.slate.KEY_NOTIFICATION_DOT
-import ca.joshstagg.slate.KEY_SECONDS_COLOR
-import ca.joshstagg.slate.R
+import ca.joshstagg.slate.*
 import ca.joshstagg.slate.config.WatchFacePreviewView
 import ca.joshstagg.slate.config.items.ConfigComplication
-import java.util.concurrent.TimeUnit
+
 
 /**
  * Slate ca.joshstagg.slate.config
@@ -18,24 +18,30 @@ class ConfigComplicationViewHolder(itemView: View, private val sharedPrefs: Shar
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val preview: WatchFacePreviewView = itemView.findViewById(R.id.config_watch_preview)
+    private val handler: Handler = Handler(Looper.myLooper()) {
+        previewInvalidate()
+        true
+    }
 
     override fun bind(item: ConfigComplication) {
         sharedPrefs.registerOnSharedPreferenceChangeListener(this)
-        previewInvalidate()
+        preview.postInvalidate()
+        handler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, 300)
     }
 
     override fun recycle() {
+        handler.removeMessages(MSG_UPDATE_TIME)
         sharedPrefs.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key in listOf(KEY_NOTIFICATION_DOT, KEY_SECONDS_COLOR)) {
+        if (key in listOf(KEY_NOTIFICATION_DOT, KEY_SECONDS_COLOR, KEY_BACKGROUND)) {
             previewInvalidate()
         }
     }
 
     private fun previewInvalidate() {
         preview.postInvalidate()
-        preview.postDelayed({ preview.postInvalidate() }, TimeUnit.SECONDS.toMillis(1))
+        handler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, 1000)
     }
 }

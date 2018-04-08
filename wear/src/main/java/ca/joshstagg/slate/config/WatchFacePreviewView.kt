@@ -15,6 +15,7 @@ import android.support.wearable.complications.ComplicationHelperActivity
 import android.support.wearable.complications.ComplicationProviderInfo
 import android.support.wearable.complications.ProviderInfoRetriever
 import android.util.AttributeSet
+import android.util.Size
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -86,7 +87,11 @@ class WatchFacePreviewView @JvmOverloads constructor(
             .setTapAction(PendingIntent.getActivity(context, complicationId, intent, 0))
             .build()
 
-        complicationEngine.dataUpdate(complicationId, data)
+        val msg = Message()
+        msg.what = MESSAGE_COMPLICATION_UPDATE
+        msg.arg1 = complicationId
+        msg.obj = data
+        previewHandler.sendMessage(msg)
     }
 
 
@@ -146,6 +151,11 @@ class WatchFacePreviewView @JvmOverloads constructor(
         handlerThread.quit()
     }
 
+    override fun invalidate() {
+        super.invalidate()
+        previewHandler.sendEmptyMessage(MESSAGE_DRAW)
+    }
+
     private class PreviewHandler(
         looper: Looper,
         val surfaceHolder: SurfaceHolder,
@@ -157,6 +167,7 @@ class WatchFacePreviewView @JvmOverloads constructor(
         private val calendar: Calendar = Calendar.getInstance()
         private val pathClip = Path()
         private val rectF = RectF()
+        private var size = Size(0, 0)
 
         init {
             calendar.set(2000, 0, 0, 10, 10, 0)
@@ -178,8 +189,11 @@ class WatchFacePreviewView @JvmOverloads constructor(
             val width = canvas.width
             val height = canvas.height
 
-            watchEngine.initialize(width, height)
-            complicationEngine.initialize(width, height)
+            if (size.width != width || size.height != height) {
+                watchEngine.initialize(width, height)
+                complicationEngine.initialize(width, height)
+                size = Size(width, height)
+            }
 
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 

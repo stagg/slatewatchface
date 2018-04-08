@@ -20,7 +20,7 @@ class ComplicationRenderData(
     private val data: ComplicationData
 ) {
 
-    private val mainHandler = Handler(Looper.getMainLooper())
+    private val mainHandler = Handler(Looper.myLooper())
 
     val icon: Drawable? by DrawableDelegate(context, data.icon, mainHandler)
     val ambientIcon: Drawable? by DrawableDelegate(context, data.burnInProtectionIcon, mainHandler)
