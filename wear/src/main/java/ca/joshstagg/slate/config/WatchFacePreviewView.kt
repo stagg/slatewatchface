@@ -185,7 +185,7 @@ class WatchFacePreviewView @JvmOverloads constructor(
         }
 
         private fun SurfaceHolder.draw() {
-            val canvas = lockCanvas()
+            val canvas: Canvas = lockCanvas() ?: return
             val width = canvas.width
             val height = canvas.height
 

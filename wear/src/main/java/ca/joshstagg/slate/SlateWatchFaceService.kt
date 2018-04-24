@@ -17,6 +17,8 @@ import android.view.SurfaceHolder
 import ca.joshstagg.slate.complication.ComplicationEngine
 import java.util.*
 
+
+
 /**
  * Slate ca.joshstagg.slate
  * Copyright 2017 Josh Stagg
@@ -156,7 +158,6 @@ class SlateWatchFaceService : CanvasWatchFaceService() {
                 val shift2 = paints.burnInShift / 2
                 val offsetX = (random.nextFloat() * shift) - shift2
                 val offsetY = (random.nextFloat() * shift) - shift2
-                Logger.d("SlateWatchFaceService", "Translate: $offsetX, $offsetY")
                 canvas.translate(offsetX, offsetY)
             }
 

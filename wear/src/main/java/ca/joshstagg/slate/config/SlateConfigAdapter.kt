@@ -14,7 +14,7 @@ import ca.joshstagg.slate.config.viewholder.*
  */
 class SlateConfigAdapter(private val data: List<ConfigItem<*>>) : RecyclerView.Adapter<ConfigViewHolder<*>>() {
 
-    private val sharedPrefs = Slate.instance.configService.sharedPreferences
+    private val sharedPrefs = Slate.instance.configService.preferences
 
     override fun getItemCount(): Int = data.count()
 
