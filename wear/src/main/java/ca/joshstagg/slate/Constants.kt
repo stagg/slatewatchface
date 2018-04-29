@@ -18,8 +18,6 @@ package ca.joshstagg.slate
 
 import android.graphics.Color
 import android.support.wearable.complications.ComplicationData
-
-import com.google.android.gms.wearable.DataItem
 import com.google.android.gms.wearable.DataMap
 
 /**
@@ -44,12 +42,6 @@ const val KEY_SMOOTH_MODE = "SMOOTH_MODE"
 const val KEY_NOTIFICATION_DOT = "NOTIFICATION_DOT"
 const val KEY_AMBIENT_COLOR = "AMBIENT_COLOR"
 const val KEY_BACKGROUND = "BACKGROUND"
-
-/**
- * The path for the [DataItem] containing [SlateWatchFaceService] configuration.
- */
-const val SCHEME_WEAR = "wear"
-const val PATH_WITH_FEATURE = "/watch_face_config/slate"
 
 const val ACCENT_COLOR_STRING_DEFAULT = "#FF5E35B1"
 const val AMBIENT_COLOR_STRING_DEFAULT = "#FFFFFFFF"

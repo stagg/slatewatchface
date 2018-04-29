@@ -8,10 +8,10 @@ import ca.joshstagg.slate.config.items.ConfigItem
  * Slate ca.joshstagg.slate.config
  * Copyright 2017  Josh Stagg
  */
-abstract class ConfigViewHolder<in T : ConfigItem<*>>(itemView: View)
-    : RecyclerView.ViewHolder(itemView) {
+abstract class ConfigViewHolder<in T : ConfigItem<*>>(itemView: View) :
+    RecyclerView.ViewHolder(itemView) {
 
-    abstract fun bind(item : T)
+    abstract fun bind(item: T)
 
     abstract fun recycle()
 }

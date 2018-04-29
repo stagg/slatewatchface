@@ -12,8 +12,8 @@ import ca.joshstagg.slate.config.items.ConfigCheckBox
  * Slate ca.joshstagg.slate.config
  * Copyright 2017  Josh Stagg
  */
-class ConfigCheckBoxViewHolder(itemView: View, private val sharedPreferences: SharedPreferences)
-    : ConfigViewHolder<ConfigCheckBox>(itemView), CompoundButton.OnCheckedChangeListener {
+class ConfigCheckBoxViewHolder(itemView: View, private val sharedPreferences: SharedPreferences) :
+    ConfigViewHolder<ConfigCheckBox>(itemView), CompoundButton.OnCheckedChangeListener {
 
     private val checkBox: CheckBox = itemView.findViewById(R.id.config_checkbox)
     private val title: TextView = itemView.findViewById(R.id.config_title)

@@ -74,11 +74,11 @@ class ComplicationEngine(val context: Context, private val paints: SlatePaints) 
                 ?.takeIf { complicationData -> complicationData.isActive(currentTimeMillis) }
                 ?.also { complicationData ->
                     val rect = complications.getValue(id)
-                    val render = renders[id]?.also {
-                        it.canvas = canvas
-                        it.rect = rect
-                        it.currentTimeMills = currentTimeMillis
-                        it.complicationData = complicationData
+                    val render = renders[id]?.apply {
+                        this.canvas = canvas
+                        this.rect = rect
+                        currentTimeMills = currentTimeMillis
+                        this.complicationData = complicationData
                     } ?: Render(canvas, rect, currentTimeMillis, paints, complicationData)
 
                     complicationRenderFactory

@@ -28,9 +28,10 @@ class ConfigColorViewHolder(itemView: View, private val sharedPreferences: Share
         this.item = item
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         itemView.setOnClickListener {
-            val intent = Intent(it.context, SlateConfigColorListActivity::class.java)
+            val context = it.context
+            val intent = Intent(context, SlateConfigColorListActivity::class.java)
             intent.putExtra("ITEM", item)
-            it.context.startActivity(intent)
+            context.startActivity(intent)
         }
         setColor()
     }

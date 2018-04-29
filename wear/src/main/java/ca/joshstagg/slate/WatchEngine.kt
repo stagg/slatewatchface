@@ -89,7 +89,7 @@ class WatchEngine(context: Context, private val paints: SlatePaints) {
 
         val second = timeZoneMills % 60000 / 1000f
         val minute = timeZoneMills % 3600000 / 60000f
-        val hour  = timeZoneMills % 86400000 / 3600000f
+        val hour = timeZoneMills % 86400000 / 3600000f
 
         val secRotate = second / 30f * Math.PI.toFloat()
         val minRot = minute / 30f * Math.PI.toFloat()

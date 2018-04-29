@@ -12,8 +12,8 @@ import ca.joshstagg.slate.config.items.ConfigSwitch
  * Slate ca.joshstagg.slate.config
  * Copyright 2017  Josh Stagg
  */
-class ConfigSwitchViewHolder(itemView: View, private val sharedPreferences: SharedPreferences)
-    : ConfigViewHolder<ConfigSwitch>(itemView), CompoundButton.OnCheckedChangeListener {
+class ConfigSwitchViewHolder(itemView: View, private val sharedPreferences: SharedPreferences) :
+    ConfigViewHolder<ConfigSwitch>(itemView), CompoundButton.OnCheckedChangeListener {
 
     private val switch: Switch = itemView.findViewById(R.id.config_switch)
     private val title: TextView = itemView.findViewById(R.id.config_title)

@@ -17,8 +17,6 @@ import android.view.SurfaceHolder
 import ca.joshstagg.slate.complication.ComplicationEngine
 import java.util.*
 
-
-
 /**
  * Slate ca.joshstagg.slate
  * Copyright 2017 Josh Stagg
