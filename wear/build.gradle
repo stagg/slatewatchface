@@ -53,17 +53,13 @@ dependencies {
     implementation('com.google.android.support:wearable:2.3.0') {
         exclude group: 'com.android.support'
     }
-    implementation('com.google.android.gms:play-services-wearable:15.0.0') {
-        exclude group: 'com.android.support'
-    }
+
     // Support
     implementation 'com.android.support:wear:27.0.2'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // Reporting
+    // Logging
     implementation 'com.jakewharton.timber:timber:4.5.1'
 }
-
-apply plugin: 'com.google.gms.google-services'

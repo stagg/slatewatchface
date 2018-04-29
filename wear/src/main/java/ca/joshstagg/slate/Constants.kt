@@ -16,9 +16,7 @@ package ca.joshstagg.slate
  * limitations under the License.
  */
 
-import android.graphics.Color
 import android.support.wearable.complications.ComplicationData
-import com.google.android.gms.wearable.DataMap
 
 /**
  * Slate ca.joshstagg.slate
@@ -32,10 +30,6 @@ const val MSG_UPDATE_TIME = 0
 const val INTERACTIVE_UPDATE_RATE_MS: Long = 1000
 const val INTERACTIVE_SMOOTH_UPDATE_RATE_MS: Long = 1000 / 30
 
-/**
- * The [DataMap] key for [SlateWatchFaceService] second digits color name.
- * The color name must be a [String] recognized by [Color.parseColor].
- */
 const val KEY_COMPLICATIONS = "COMPLICATIONS"
 const val KEY_SECONDS_COLOR = "SECONDS_COLOR_1_2_1"
 const val KEY_SMOOTH_MODE = "SMOOTH_MODE"
