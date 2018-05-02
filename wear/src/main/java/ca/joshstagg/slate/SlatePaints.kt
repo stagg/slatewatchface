@@ -26,6 +26,7 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
     val secStart = -20 * scale
     val notificationOffset = 18 * scale
 
+    val burnInShift = 3f * scale
 
     private val complicationTextSize = 14f * textScale
     private val complicationMainTextSize = 12f * textScale
@@ -41,8 +42,12 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
     val complicationSubText: Paint = Paint()
     val complicationEdge: Paint = Paint()
     val complicationFill: Paint = Paint()
-
     val complicationSecondary: Paint = Paint()
+
+    val tickColor = 0x64D5D5D6
+    val primaryHandColor = 0xfff5f5f5.toInt()
+    val shadowColor = 0xaa000000.toInt()
+    val primaryComplicationColor = 0xF4FFFFFF.toInt()
 
     var accentHandColor = Config().accentColor
         set(value) {
@@ -51,43 +56,49 @@ class SlatePaints(context: Context, scaleFactor: Float = 1f) {
                 second.color = value
             }
         }
-    private val mTickColor = 0x64D5D5D6
-    private val mPrimaryHandColor = 0xfff5f5f5.toInt()
-    private val mShadowColor = 0xaa000000.toInt()
-    private val primaryComplicationColor = 0xF4FFFFFF.toInt()
-    val complicationTint: Int
-        get() {
-            return primaryComplicationColor
+
+    var handColor = primaryHandColor
+        set(value) {
+            if (field != value) {
+                field = value
+                hour.color = value
+                minute.color = value
+                center.color = value
+            }
         }
 
+
+    val complicationTint: Int
+        get() = primaryComplicationColor
+
     init {
-        hour.color = mPrimaryHandColor
+        hour.color = primaryHandColor
         hour.strokeWidth = 6f * scale
         hour.isAntiAlias = true
         hour.strokeCap = Paint.Cap.BUTT
-        hour.setShadowLayer(2.5f * scale, 0f, 0f, mShadowColor)
+        hour.setShadowLayer(2.5f * scale, 0f, 0f, shadowColor)
 
-        minute.color = mPrimaryHandColor
+        minute.color = primaryHandColor
         minute.strokeWidth = 5f * scale
         minute.isAntiAlias = true
         minute.strokeCap = Paint.Cap.BUTT
-        minute.setShadowLayer(2f * scale, 0f, 0f, mShadowColor)
+        minute.setShadowLayer(2f * scale, 0f, 0f, shadowColor)
 
         second.color = accentHandColor
         second.strokeWidth = 3f * scale
         second.isAntiAlias = true
         second.strokeCap = Paint.Cap.BUTT
-        second.setShadowLayer(3f * scale, 0f, 0f, mShadowColor)
+        second.setShadowLayer(3f * scale, 0f, 0f, shadowColor)
 
-        center.color = mPrimaryHandColor
+        center.color = primaryHandColor
         center.strokeWidth = 5f * scale
         center.isAntiAlias = true
         center.strokeCap = Paint.Cap.BUTT
 
-        tick.color = mTickColor
+        tick.color = tickColor
         tick.strokeWidth = 3f * scale
         tick.isAntiAlias = true
-        tick.setShadowLayer(.5f * scale, 0f, 0f, mShadowColor)
+        tick.setShadowLayer(.5f * scale, 0f, 0f, shadowColor)
 
         complicationText.color = primaryComplicationColor
         complicationText.textSize = complicationTextSize

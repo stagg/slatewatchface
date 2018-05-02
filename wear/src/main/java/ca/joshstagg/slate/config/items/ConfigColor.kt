@@ -8,19 +8,20 @@ import android.os.Parcelable
  * Slate ca.joshstagg.slate.config
  * Copyright 2017  Josh Stagg
  */
-class ConfigColor(key: String, title: String, default: String,
-                  val defaultText: String,
-                  val colorNames: Array<String>,
-                  val colorValues: Array<String>)
-    : ConfigItem<String>(key, title, default), Parcelable {
+class ConfigColor(
+    key: String, title: String, default: String,
+    val defaultText: String,
+    val colorNames: Array<String>,
+    val colorValues: Array<String>
+) : ConfigItem<String>(key, title, default), Parcelable {
 
     constructor(source: Parcel) : this(
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.createStringArray(),
-            source.createStringArray()
+        source.readString(),
+        source.readString(),
+        source.readString(),
+        source.readString(),
+        source.createStringArray(),
+        source.createStringArray()
     )
 
     override fun describeContents() = 0

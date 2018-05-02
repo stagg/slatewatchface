@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
-    android:paddingBottom="8dp"
-    android:paddingEnd="@dimen/config_activity_padding"
     android:paddingStart="@dimen/config_activity_padding"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/config_activity_padding"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/config_color"
@@ -21,39 +21,33 @@
         android:foreground="@drawable/ic_palette_white_40dp"
         android:gravity="center" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/config_title"
+        style="@style/Widget.WearDiag.TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:layout_marginEnd="@dimen/standard_margin"
         android:layout_toEndOf="@+id/config_color"
-        android:orientation="vertical">
+        android:ellipsize="end"
+        android:gravity="bottom|start"
+        android:maxLines="2"
+        tools:text="Config switch option" />
 
-
-        <TextView
-            android:id="@+id/config_title"
-            style="@style/Widget.WearDiag.TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/standard_margin"
-            android:layout_marginStart="@dimen/standard_margin"
-            android:ellipsize="end"
-            android:gravity="bottom|start"
-            android:maxLines="2"
-            tools:text="Config switch option" />
-
-        <TextView
-            android:id="@+id/config_summary"
-            style="@style/Widget.WearDiag.TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/standard_margin"
-            android:layout_marginStart="@dimen/standard_margin"
-            android:ellipsize="end"
-            android:gravity="top|start"
-            android:maxLines="1"
-            android:textColor="@color/secondary_text_light"
-            android:textSize="@dimen/summary_text_size" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/config_summary"
+        style="@style/Widget.WearDiag.TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/config_title"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:layout_toEndOf="@+id/config_color"
+        android:ellipsize="end"
+        android:gravity="top|start"
+        android:maxLines="1"
+        android:textColor="@color/secondary_text_light"
+        android:textSize="@dimen/summary_text_size" />
 
 </RelativeLayout>
 

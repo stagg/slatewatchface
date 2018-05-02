@@ -7,3 +7,4 @@
 .idea/
 gradle.properties
 *.iml
+/wear/google-services.json

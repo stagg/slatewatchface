@@ -12,7 +12,7 @@ class Slate : Application() {
     }
 
     val configService: ConfigManager by lazy {
-        ConfigManager(this.applicationContext)
+        ConfigManager(applicationContext)
     }
 
     init {

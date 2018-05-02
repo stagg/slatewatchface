@@ -34,7 +34,7 @@ class SlateConfigColorListActivity : Activity(), OnColorSelectedListener {
     }
 
     override fun onColorSelected(color: String) {
-        Slate.instance.configService.sharedPreferences.edit().putString(configColor.key, color).apply()
+        Slate.instance.configService.preferences.edit().putString(configColor.key, color).apply()
         finish()
     }
 

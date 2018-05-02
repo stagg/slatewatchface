@@ -15,8 +15,8 @@ import ca.joshstagg.slate.config.items.ConfigColor
  * Slate ca.joshstagg.slate.config
  * Copyright 2017  Josh Stagg
  */
-class ConfigColorViewHolder(itemView: View, private val sharedPreferences: SharedPreferences)
-    : ConfigViewHolder<ConfigColor>(itemView), SharedPreferences.OnSharedPreferenceChangeListener {
+class ConfigColorViewHolder(itemView: View, private val sharedPreferences: SharedPreferences) :
+    ConfigViewHolder<ConfigColor>(itemView), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val colorView: ImageView = itemView.findViewById(R.id.config_color)
     private val title: TextView = itemView.findViewById(R.id.config_title)
@@ -28,9 +28,10 @@ class ConfigColorViewHolder(itemView: View, private val sharedPreferences: Share
         this.item = item
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         itemView.setOnClickListener {
-            val intent = Intent(it.context, SlateConfigColorListActivity::class.java)
+            val context = it.context
+            val intent = Intent(context, SlateConfigColorListActivity::class.java)
             intent.putExtra("ITEM", item)
-            it.context.startActivity(intent)
+            context.startActivity(intent)
         }
         setColor()
     }
@@ -43,7 +44,10 @@ class ConfigColorViewHolder(itemView: View, private val sharedPreferences: Share
 
     private fun setColor() {
         val color = sharedPreferences.getString(item.key, item.default)
-        val colorIndex = item.colorValues.indexOf(color)
+        var colorIndex = item.colorValues.indexOf(color)
+        if (colorIndex < 0) {
+            colorIndex = 0
+        }
         colorView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color))
         title.text = item.title
         summary.text = item.colorNames[colorIndex]

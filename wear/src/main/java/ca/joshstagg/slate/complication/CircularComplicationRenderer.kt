@@ -3,16 +3,16 @@ package ca.joshstagg.slate.complication
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
+import ca.joshstagg.slate.Ambient
 
 internal abstract class CircularComplicationRenderer : ComplicationRenderer {
 
     private val pathClip = Path()
     private val rectF = RectF()
 
-    override final fun render(render: Render) = with(render) {
+    final override fun render(render: Render) = with(render) {
         // Set the circular clip
         clip(rect)
-
         // Clip and do the complication drawing
         canvas.save()
         canvas.clipPath(pathClip)
@@ -26,7 +26,7 @@ internal abstract class CircularComplicationRenderer : ComplicationRenderer {
 
     protected open fun Render.renderInBounds() {}
 
-    override final fun ambientRender(render: Render) = with(render) {
+    final override fun ambientRender(ambient: Ambient, render: Render) = with(render) {
         // Set the circular clip
         clip(rect)
         // Clip for complication drawing

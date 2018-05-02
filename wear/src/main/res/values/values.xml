@@ -35,4 +35,16 @@
         <item>Dark</item>
         <item>Light</item>
     </string-array>
+    <string-array name="ambient_color_array">
+        <item>#FFFFFF</item>
+        <item>#e0e0e0</item>
+        <item>#9e9e9e</item>
+        <item>#616161</item>
+    </string-array>
+    <string-array name="ambient_color_array_names">
+        <item>White</item>
+        <item>Grey 300</item>
+        <item>Grey 500</item>
+        <item>Grey 700</item>
+    </string-array>
 </resources>
